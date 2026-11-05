@@ -14,8 +14,12 @@ parts:
         title: Seven-day evolving XYZ with gaps
   - caption: Reference
     chapters:
+      - file: reference_matrix
+        title: Reference, adaptive bins and theta
       - file: likelihood
-        title: Joint gap-aware likelihood
+        title: Exact compressed gap benchmark
+      - file: gaplike_xyz
+        title: Can GapLike fit XYZ?
       - file: models
         title: Models and conventions
       - url: https://nz-gravity.github.io/LogPSplinePSD/intro.html

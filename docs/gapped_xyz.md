@@ -1,123 +1,137 @@
 # Seven-day evolving XYZ with gaps
 
-This case simulates **120,960 real XYZ samples over seven days**, at a
-five-second cadence, and recovers smooth secondary-noise spectra through an
-evolving, unequal-arm TDI-2 response. The same simulated record is observed
-continuously and with two gaps. Both fits use a joint gap-aware Gaussian
-likelihood, retaining XYZ, cross-frequency and real/imaginary correlations.
+This case simulates **120,960 real XYZ samples over seven days** at a
+five-second cadence. A parametric orbit response places the moving dips;
+a full multivariate log-P-spline learns a smooth correction to that response.
+Continuous and gapped observations use identical priors, knots, adaptive bins
+and final evaluation support.
 
 ```sh
 uv sync --locked --extra gapped
 uv run --extra gapped lisa-demo-gaps --output outputs/seven_day
 ```
 
-`--quick` retains seven days and the native 1.65 microHz frequency spacing,
-but reduces the number of source bands and fitting features.
+## Reference plus a full matrix correction
 
-## Following the short-segment orbit idea
+Write the known physical reference as $S_0(t,f)=L_0(t,f)L_0(t,f)^\dagger$.
+The recovered spectrum is
 
-[Burke et al., *Noisy Pipelines I*](https://arxiv.org/html/2610.28726v1)
-use four seven-day segments from a longer simulation, with eight orbit epochs
-per segment. Stationary TM/OMS secondary spectra acquire nonstationarity
-through the changing light travel times. Their likelihood averages covariance
-kernels across epochs and includes data conditioning; their example has no gaps.
+$$S(t,f)=L_0(t,f)\,R(f)\,L_0(t,f)^\dagger.$$
 
-Here, [lisaorbits](https://gitlab.in2p3.fr/lisa-simulation/orbits)' offline
-Keplerian approximation supplies six directed photon travel times. The
-paper's TDI-2 mixing matrix maps stationary link noises to XYZ. At eight
-epochs we construct response filters, then interpolate their **time-domain
-outputs using a partition of unity**. Every epoch acts on the same link-noise
-realization. This preserves cross-epoch correlations and produces genuinely
-time-varying XYZ, rather than a draw from an orbit-averaged stationary spectrum.
+The positive-definite matrix $R(f)$ uses **nine real spline fields**:
+three log innovation variances and the real/imaginary parts of three
+cross-channel Cholesky regression coefficients. This learns changes in
+cross spectra and coherence as well as auto spectra. $R=I$ gives the
+uncorrected parametric reference. Dip positions are not additional sine-fit
+parameters.
 
-This is a quasi-static filter simulation. It does not reproduce noncommuting
-time-delay operators, the paper's ESA orbit, or its filtering/decimation chain.
-The known geometry places the dips; their positions are not fitted sine parameters.
+The residual correction is frequency-dependent. Orbital evolution supplies
+the time variation over this short segment; freely varying residual time
+surfaces are not inferred. This follows the short-segment idea in
+[Burke et al., *Noisy Pipelines I*](https://arxiv.org/html/2610.28726v1),
+using offline Keplerian orbits instead of their ESA ephemerides.
 
-## What the spline learns
+The simulator applies eight orbit-epoch TDI-2 response filters to the
+**same stationary link-noise realization**, interpolating their time-domain
+outputs with a partition of unity. It is genuinely time-varying, but remains
+a quasi-static approximation to noncommuting TDI delays. It omits the
+paper's full instrument, filtering and decimation chain. Its declared
+source-frequency bands discretize the injected secondary spectra; those
+bands are distinct from adaptive likelihood bins.
 
-Two cubic log-P-splines describe frequency-dependent multiplicative
-corrections to the nominal TM and OMS link PSDs. The evolving response
-propagates these recovered spectra into the full complex XYZ spectral matrix
-at any epoch. The secondary spectra are stationary, as in the paper's
-short-segment model; no freely varying time-spline coefficients are inferred.
+## Adaptive bins and marginalised theta
 
-Each component uses seven library `SplineBasis` functions on log frequency
-and the library's trace-normalized integrated second-derivative penalty.
-A fixed proper Gaussian prior has precision `10 P + I / 0.8²` for natural-log
-PSD weights. Continuous and gapped fits have identical source bands, basis,
-penalty, prior, frequencies and evaluation grid. Knots and regularization are
-specified before simulation. There is no model selection on the evaluation
-truth or independent validation data.
+The main fit uses all **59,634 native Fourier bins** from 0.4 to 99 mHz.
+It whitens each coefficient by its own orbit-and-window reference before
+pooling. The nominal reference includes all epoch cross terms and the actual
+GapLike gap gate and taper.
 
-For tractability, log corrections are constant within 32 declared
-logarithmic source-frequency bands (16 in quick mode). The physical transfer
-is still evaluated at **every native Fourier bin**, including around the
-response nulls. This band discretization belongs to both the simulator and
-its likelihood; it is not hidden interpolation error.
+The library's adaptive matrix pilot selects bin edges from **gapped training
+data only**. The same partition is frozen for both observations before
+inference. Full complex cross-products and their counts are summed from
+unsmoothed native data. Prespecified 0.1 mHz neighbourhoods around the
+30, 60 and 90 mHz nulls retain native bins. In the saved run, 59,634 native
+frequencies become 599 aggregates, with widths from 1 to 256.
 
-## Observations and likelihood
+Both fits use twelve cubic basis functions for each of the nine fields,
+on log-frequency coordinates. The pinned library analytically marginalises
+the six Gaussian theta spline fields while fitting the three diagonal
+fields and smoothing scales with VI. It restores theta from the exact
+conditional Gaussian before reconstructing matrices. Three VI restarts use
+6,000 updates per row; their selection uses training ELBO only.
+See the [model, priors and inference details](reference_matrix.md).
 
-[GapLike](https://github.com/gaplike/gaplike) constructs four-hour and six-hour
-gaps at days 1.5 and 4.25, with 30-minute edge tapers and a common segment
-Tukey window. The un-tapered duty cycle is 94.05%. Zero-filled samples are
-never counted as additional observations.
+## What is exact, and what is approximate?
 
-The standard inference retains 48 prespecified complex XYZ Fourier bins
-(288 real features), including neighbouring native bins at the nominal
-30, 60 and 90 mHz response nulls. Its likelihood is **exact for this fixed
-compressed feature vector under the declared simulator**, not for all
-120,960 × 3 samples. It propagates the actual mask/window and all epoch
-filters into the joint real covariance. It includes the pseudo-covariance
-that a proper-complex likelihood would omit. See the
-[joint likelihood derivation and checks](likelihood.md).
+The main matrix correction uses an **independent-frequency Whittle
+approximation**. It models all XYZ cross spectra, but does not retain
+cross-frequency covariance or real-data pseudo-covariance. The nominal
+window reference is exact for the declared simulator's same-frequency
+covariance; propagating an arbitrary residual correction through that
+reference is still an approximation.
 
-A third fit keeps the correct per-bin 6×6 real covariance but drops
-inter-frequency correlations. This is an explicitly labelled approximation,
-not uncorrected zero-filled Whittle inference. All three fits use three MAP
-optimization restarts. They produce point reconstructions, not VI or NUTS
-posterior intervals.
+The retained **exact joint Gaussian benchmark** includes channel, frequency,
+quadrature and epoch correlations for 48 selected Fourier bins / 288 real
+features. It fits two smooth secondary-component corrections with MAP and
+its own priors. Its smaller information budget and narrower model make it
+a covariance control, not an equal-information contest with full matrix VI.
+[Benchmark derivation and controls](likelihood.md).
 
-## Saved seed-7 result
+**GapLike is useful for XYZ.** Its current independent-channel likelihood
+is not a drop-in correlated XYZ likelihood. We use its observation tools
+and explicitly extend the covariance to XYZ. The
+[GapLike and XYZ explanation](gaplike_xyz.md) distinguishes these pieces.
 
-![Seven-day spline recovery](assets/seven_day_xyz.png)
+## Saved standard result, seed 7
+
+![Reference-corrected multivariate spline recovery](assets/seven_day_xyz.png)
 
 ```{include} assets/seven_day_errors.md
 ```
 
-The continuous reconstruction is slightly more accurate in this realization.
-The gap-aware and independent-bin fits are close; the independent-bin point
-estimate has slightly lower reconstruction RMSE here. This single paired
-simulation does **not** establish a scientific advantage for either
-approximation. The exact likelihood supplies a controlled benchmark.
+The full correction reduces auto-spectrum error relative to the uncorrected
+reference in this realization. Continuous and gapped errors are close.
+Coherence error is larger than for the tightly constrained two-component
+benchmark: additional matrix flexibility does not improve every metric.
+The benchmark uses fewer data and different priors, so its RMSE does not
+establish which likelihood is superior.
 
-Reconstruction scores cover all XYZ auto spectra, complex cross spectra and
-coherence on a fixed grid of 17 epochs, logarithmic frequencies, and native
-bins within 0.6 mHz of the three nulls. `errors.json` also reports signed
-residuals and adjacent-frequency residual differences in each null window.
-The known response strongly constrains the dip shapes; small oscillation
-scores do not demonstrate that unconstrained splines discover the nulls.
+Scores use the same fixed 17-epoch reconstruction grid and native bins
+within 0.6 mHz of all three nulls. Detailed errors include signed residuals,
+complex cross spectra, coherence and adjacent-frequency residual differences.
+Known geometry strongly constrains the dip shapes; these plots do not show
+unconstrained splines discovering response zeros.
 
-Four independent realizations, seeds 1007–1010, provide final predictive
-checks. Their quadratics are scored with the **full** covariance for every
-candidate; an injected-covariance control is also saved. No evaluation data
-are used for fits or restarts. The in-sample amplitude score is not used as
-a goodness-of-fit claim. A small validation sample does not calibrate
-posterior uncertainty or demonstrate ensemble coverage.
+All standard-run rows and restarts satisfy the stated ELBO plateau check.
+The maximum restart disagreement in reconstructed auto spectra is about
+0.0016 dex. [ELBO traces](assets/seven_day_elbo.png) and the
+[detailed diagnostics](assets/seven_day_errors.json) accompany the result.
+These are numerical checks of exploratory VI, not proof of posterior
+accuracy or NUTS-equivalent uncertainty.
 
-## Outputs and reproducibility
+Four independent realizations, seeds 1007–1010, are generated only after
+partition selection and fitting. Their mean marginal quadratic per dimension
+is approximately 1.000 for both observations. The benchmark separately
+scores its full joint Gaussian on the same independent seeds. No raw
+ELBO/likelihood comparison is made across these different targets, and no
+NUTS recommendation follows from this single simulation.
 
-- `comparison.png`: the compact continuous/gapped comparison above.
-- `recovery.npz`: real XYZ data, masks, windows, native bin indices, source
-  bands, library basis/penalty, injected and fitted corrections, and full
-  reconstructed spectral matrices.
-- `errors.json` and `errors.md`: reconstruction and independent predictive
-  scores, optimization objectives, gradients and all restart results.
-- `run.json`: dependency versions, Git/source hashes, orbit and observation
-  settings, validation seeds and approximation limits.
+## Outputs
 
-The [saved receipt](assets/seven_day_run.json) and
-[detailed errors](assets/seven_day_errors.json) accompany this figure. The
-old stationary-surrogate prototype remains available as
-`python -m lisa_case_studies.stationary_gap_control` for historical controls;
-`lisa-demo-gaps` runs the time-varying spline case described here.
+- `comparison.png`, `errors.md`, `errors.json`: main comparison and diagnostics.
+- `matrix_recovery.npz`: physical spectral matrices, corrections, native
+  frequencies, actual adaptive edges/counts and conditioned references.
+- `continuous_correction.nc`, `gapped_correction.nc`: library `PSDResult`
+  files with restored theta draws, in reference coordinates. These are
+  HDF5-backed; use `PSDResult.from_netcdf`. Frequency coordinates in these
+  files are log-frequency spline coordinates, not Hz.
+- `*_basis.npz`, `*_elbo.npz`, `*_vi.json`, `elbo.png`: actual library bases,
+  penalties, three-restart loss traces and stability checks.
+- `benchmark_comparison.png`, `benchmark_errors.*`, `benchmark_run.json`,
+  `recovery.npz`: the exact compressed control and its real simulated data.
+- `run.json`: versions, source hashes, approximations and validation settings.
+
+The [saved receipt](assets/seven_day_run.json) records the source version.
+Use `--benchmark-only` to run the exact control alone. `--quick` keeps all
+seven days and all native bins in the main fit, with shorter VI, fewer stored
+draws, fewer source bands and a smaller exact benchmark.

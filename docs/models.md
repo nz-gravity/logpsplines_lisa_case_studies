@@ -55,7 +55,10 @@ transfer functions.
 
 Orbit-epoch filters act on shared stationary Fourier sources and are
 interpolated in time. A real gate/window and selected Fourier transform
-produce the observations. The [joint likelihood](likelihood.md) propagates
-those same operators, retaining all correlations for the compressed
-features. This is an explicit discretized, quasi-static simulation, without
+produce the observations. The [exact benchmark](likelihood.md) propagates
+those same operators, retaining all correlations for its compressed
+features. The main [full matrix spline correction](reference_matrix.md)
+uses a window-aware nominal reference, adaptive Whittle statistics and
+analytically marginalised Cholesky theta; it is an independent-frequency
+approximation. This is an explicit discretized, quasi-static simulation, without
 the paper's full instrument and conditioning chain.

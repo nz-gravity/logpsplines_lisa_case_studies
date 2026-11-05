@@ -36,6 +36,8 @@ pages = [
         "xyz",
         "gapped_xyz",
         "likelihood",
+        "reference_matrix",
+        "gaplike_xyz",
         "models",
     )
 ]
