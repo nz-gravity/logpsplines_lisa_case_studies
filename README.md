@@ -1,14 +1,16 @@
 # LISA case studies for LogPSplinePSD
 
 Small, runnable examples for the [LogPSplinePSD documentation](https://nz-gravity.github.io/LogPSplinePSD/).
-Start with these two cases; each makes its own seeded synthetic data, runs a
-fit, and saves a comparison figure and a reproducibility receipt. No archived
-paper data, ephemeris download, or cluster account is required.
+Start with the first two cases; each makes its own seeded synthetic data,
+runs a fit, and saves a comparison figure and a reproducibility receipt.
+The third case is an orbit-response and gap-conditioning prototype. Default
+runs require no archived paper data, ephemeris download, or cluster account.
 
 | Case | What it teaches | Run |
 |---|---|---|
 | [Time-varying A noise](scripts/01_time_varying_noise.py) | Recover a changing PSD with a tensor log-P-spline; compare with a stationary spline on fixed held-out rows | `uv run lisa-demo-time` |
 | [Correlated XYZ noise](scripts/02_xyz_parametric_noise.py) | Fit acceleration and OMS noise levels with the full spectral matrix; inspect auto spectra, cross spectra and coherence | `uv run lisa-demo-xyz` |
+| [Orbit response and gaps — prototype](docs/gapped_xyz.md) | Seven-day orbit-derived TDI-2 reference and GapLike window conditioning; full per-bin XYZ point fits | `uv run --extra gapped lisa-demo-gaps` |
 
 ## Quick start
 
@@ -86,12 +88,16 @@ interpreting posterior uncertainty.
 
 ## Scope and next cases
 
-These are teaching examples under a deliberately simple observation model:
+The first two cases use a deliberately simple observation model:
 equal-arm, first-generation Michelson instrumental spectra with SciRDv1 noise
 levels. They simulate independent spectral coefficients directly, rather
 than running a time-domain TDI simulator or a WDM transform. The illustrative
 time drift is prescribed, not an orbital noise prediction. See
 [model conventions and sources](docs/models.md).
+
+The [seven-day gaps prototype and implementation notes](docs/gapped_xyz.md)
+start the orbit-response and gap-conditioning work. This does not yet claim
+validated time-varying spline recovery with gaps.
 
 The next additions I would make are:
 
@@ -116,6 +122,10 @@ Tests check the analytic XYZ formulas, coefficient normalization, positive
 definiteness, and the full matrix likelihood and gradients against an
 independent log-determinant/solve calculation. Large output files are ignored;
 the two small README previews are retained in `docs/assets/`.
+
+With `uv sync --extra gapped --locked`, `uv run --extra gapped pytest -q`
+also runs the orbit-response and GapLike integration checks. The gap prototype
+retains its own clearly labeled preview in the implementation notes.
 
 The case studies live at
 [nz-gravity/logpsplines_lisa_case_studies](https://github.com/nz-gravity/logpsplines_lisa_case_studies).

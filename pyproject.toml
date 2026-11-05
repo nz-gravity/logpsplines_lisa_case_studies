@@ -16,12 +16,20 @@ dependencies = [
   "matplotlib>=3.10",
 ]
 
+[project.optional-dependencies]
+gapped = [
+  "gaplike @ git+https://github.com/gaplike/gaplike.git@99c61931f3f47997d589f255191052ccdbb79f97",
+  "lisaorbits==3.0.3",
+  "astropy==7.2.0",
+]
+
 [dependency-groups]
 dev = ["pytest>=8", "ruff>=0.12"]
 
 [project.scripts]
 lisa-demo-time = "lisa_case_studies.time_varying:main"
 lisa-demo-xyz = "lisa_case_studies.xyz:main"
+lisa-demo-gaps = "lisa_case_studies.gapped_xyz:main"
 
 [project.urls]
 Repository = "https://github.com/nz-gravity/logpsplines_lisa_case_studies"
