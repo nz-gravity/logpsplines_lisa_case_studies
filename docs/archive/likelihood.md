@@ -105,7 +105,7 @@ and gradients, and an exact stationary GapLike likelihood-difference control.
 
 ## Saved benchmark controls
 
-![Exact compressed Gaussian controls](assets/seven_day_benchmark.png)
+![Exact compressed Gaussian controls](../assets/seven_day_benchmark.png)
 
 The standard seed-7 controls use the same 48 bins, seven basis functions per
 secondary component, fixed prior and three MAP restarts. Their auto-spectrum
@@ -114,7 +114,7 @@ and 0.0699 for the gapped independent-bin approximation. In this realization,
 retaining the exact covariance does not improve the point RMSE over that
 approximation. This is not a posterior calibration study.
 
-The [benchmark receipt](assets/seven_day_benchmark_run.json) and
-[benchmark errors](assets/seven_day_benchmark_errors.json) retain all controls,
+The [benchmark receipt](../assets/seven_day_benchmark_run.json) and
+[benchmark errors](../assets/seven_day_benchmark_errors.json) retain all controls,
 null-window residual scores, optimizer checks and independent predictive
 scores. These numerical targets are distinct from the full matrix VI fit.

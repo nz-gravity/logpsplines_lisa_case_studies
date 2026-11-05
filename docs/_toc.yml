@@ -1,26 +1,26 @@
 format: jb-book
 root: intro
 parts:
-  - caption: Getting started
+  - caption: Start here
     chapters:
       - file: running
-  - caption: LISA case studies
+        title: Install and run
+  - caption: Notebook walkthroughs
+    numbered: false
     chapters:
-      - file: time_varying
-        title: Nonstationary A noise
-      - file: xyz
-        title: Correlated XYZ noise
-      - file: gapped_xyz
-        title: Seven-day evolving XYZ with gaps
-  - caption: Reference
+      - file: notebooks/01_generate_data
+        title: 1. Generate the data
+      - file: notebooks/02_time_varying_psd
+        title: 2. Time-varying PSD
+      - file: notebooks/03_xyz_psd
+        title: 3. Standard XYZ estimation
+      - file: notebooks/04_short_xyz_gaps
+        title: 4. Short-duration XYZ with gaps
+  - caption: Further reading
     chapters:
-      - file: reference_matrix
-        title: Reference, adaptive bins and theta
-      - file: likelihood
-        title: Exact compressed gap benchmark
+      - file: notebook_models
+        title: Simulation and likelihood notes
       - file: gaplike_xyz
-        title: Can GapLike fit XYZ?
-      - file: models
-        title: Models and conventions
+        title: GapLike and correlated XYZ
       - url: https://nz-gravity.github.io/LogPSplinePSD/intro.html
         title: LogPSplinePSD documentation ↗

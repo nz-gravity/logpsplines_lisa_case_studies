@@ -1,78 +1,72 @@
-# LISA case studies for LogPSplinePSD
+# LISA PSD case studies
 
-[**Read the case studies →**](https://nz-gravity.github.io/logpsplines_lisa_case_studies/)
- · [LogPSplinePSD docs](https://nz-gravity.github.io/LogPSplinePSD/intro.html)
+[**Read the notebook walkthroughs →**](https://nz-gravity.github.io/logpsplines_lisa_case_studies/)
+ · [LogPSplinePSD documentation](https://nz-gravity.github.io/LogPSplinePSD/intro.html)
 
-Small, reproducible noise examples, from simple spectra to seven days of
-evolving, correlated XYZ data with time-domain gaps. The website shares the
-library's theme and branding, with a persistent return button.
+Four executed Jupyter notebooks explain the data, call the library, and plot
+what was recovered. The estimated quantities are channel PSDs and full
+spectral matrices.
 
-| Case | Demonstration | Run |
-|---|---|---|
-| [Nonstationary A noise](docs/time_varying.md) | Tensor log-P-spline versus stationary spline on held-out rows | `uv run lisa-demo-time` |
-| [Correlated XYZ noise](docs/xyz.md) | Full spectral matrix, TM/OMS scales, two-parameter NUTS | `uv run lisa-demo-xyz` |
-| [Seven-day evolving XYZ](docs/gapped_xyz.md) | Parametric orbit response + full matrix spline correction, adaptive bins, marginalised theta; continuous/gapped comparisons | `uv run --extra gapped lisa-demo-gaps` |
+| Notebook | What you do |
+|---|---|
+| [1. Generate the data](docs/notebooks/01_generate_data.ipynb) | Inspect full XYZ spectra, generate real time series, add time variation and gaps |
+| [2. Time-varying PSD](docs/notebooks/02_time_varying_psd.ipynb) | Prepare local channel-A powers and call `log_psplines.fit` |
+| [3. Standard XYZ estimation](docs/notebooks/03_xyz_psd.ipynb) | Fit the vanilla multivariate spline to `TimeSeries`; inspect auto/cross spectra and coherence |
+| [4. Short-duration XYZ with gaps](docs/notebooks/04_short_xyz_gaps.ipynb) | Fit a full matrix correction around a seven-day orbit reference, with an exact selected-feature covariance check |
 
-## Run the seven-day case
+Start with notebook 1. It saves the shared inputs used by the other three.
+The saved notebook outputs are visible on GitHub and on the docs website.
+The teaching sequence does not fit instrument-noise component levels.
 
-Requires Python 3.12+ and [uv](https://docs.astral.sh/uv/).
+## Run the notebooks
 
 ```sh
 git clone https://github.com/nz-gravity/logpsplines_lisa_case_studies.git
 cd logpsplines_lisa_case_studies
-git checkout 6837a066c46afce78ff9cd58d372a1ae5ba0ac37
-uv sync --locked --extra gapped
-uv run --extra gapped lisa-demo-gaps --output outputs/seven_day
+git checkout f7fa624323db7dc2c1166d7f0185eaf8e02c1073
+uv sync --locked --extra gapped --group notebooks --group docs
+uv run --no-sync jupyter lab docs/notebooks
 ```
 
-The checkout pins the scientific version used for the figure and works while
-[PR #1](https://github.com/nz-gravity/logpsplines_lisa_case_studies/pull/1) is awaiting merge.
-
-The model is `S(t,f) = L0(t,f) R(f) L0(t,f)†`: known Keplerian TDI-2 response
-sets the dips, while a positive-definite multivariate Cholesky spline learns
-the residual covariance. The short-segment residual is frequency-only;
-the reference carries orbital time variation. The main fit uses 59,634
-native frequencies, pooled into a shared training-selected adaptive partition.
-It analytically marginalises six Gaussian theta fields and fits the remaining
-parameters with three VI restarts. It restores conditional theta draws for
-reconstruction. See [model and priors](docs/reference_matrix.md).
-
-![Reference-corrected multivariate spline recovery](docs/assets/seven_day_xyz.png)
-
-The main Whittle likelihood uses an orbit-and-window-aware reference but
-omits inter-frequency and pseudo-covariance. An **exact joint Gaussian
-benchmark** for a smaller retained feature set remains alongside it, fitting
-two secondary-component corrections. Their data budgets and priors differ;
-RMSE alone does not compare the likelihoods fairly. Both use the same real
-seven-day simulation and GapLike masks. [Can GapLike fit XYZ?](docs/gaplike_xyz.md)
-
-`--quick` keeps all seven days and all main-fit frequencies, with shorter VI
-and a smaller benchmark. `--benchmark-only` runs just the exact control.
-Existing output directories are never overwritten; use `--seed` and `--output`.
-The numbered scripts in `scripts/` call the same entry points.
-
-These are exploratory point reconstructions, without calibrated uncertainty
-claims. The case adapts the short-segment response idea from
-[Burke et al., Noisy Pipelines I](https://arxiv.org/html/2610.28726v1), not their
-full instrument and conditioning pipeline. See [results and limits](docs/gapped_xyz.md).
-
-## Reproducibility and development
-
-The isolated environment pins LogPSplinePSD and GapLike to exact Git commits.
-The newer library pin enables adaptive counts and marginalised theta here;
-published paper environments are unchanged. Outputs retain actual adaptive
-edges/counts, library bases/penalties, restored coefficients, ELBO traces,
-independent validation scores and source-hash receipts. Large arrays stay in
-ignored `outputs/`; curated previews and receipts are in `docs/assets/`.
+The checkout selects the illustrated notebook version while
+[PR #1](https://github.com/nz-gravity/logpsplines_lisa_case_studies/pull/1) awaits merge.
+Select the project environment as the kernel, then run notebook 1 followed
+by the estimation lesson you need. To execute all four from the command line:
 
 ```sh
-uv run --extra gapped pytest -q
-uv run ruff check .
-uv run ruff format --check .
-uv run --group docs jupyter-book build docs --warningiserror
+uv run --no-sync python scripts/execute_notebooks.py
 ```
 
-Tests check independent dense gap covariance, reference-whitening likelihood
-invariance, complex adaptive pooling/counts, collapsed model sites and native
-reconstruction against the library. CI checks PRs and builds the website;
-`main` publishes it to GitHub Pages.
+Generated arrays live in ignored `outputs/notebooks/`. Notebook 1 can be rerun
+to regenerate the seeded datasets. No archived data or ephemeris download is
+needed; orbits are offline Keplerian approximations.
+
+## Scope
+
+The stationary lesson follows the multivariate spline construction in
+[Vajpeyi et al.](https://arxiv.org/abs/2607.04833). The seven-day lesson takes
+the short-segment idea from [Burke et al.](https://arxiv.org/html/2610.28726v1).
+It is a controlled full-matrix Gaussian simulation, not a full instrument
+pipeline. The reference carries orbital time variation; its inferred residual
+is frequency-only. The fast gap treatment is a Whittle approximation; the
+selected-feature covariance benchmark retains channel/frequency correlations.
+These walkthroughs show exploratory VI point reconstructions, without
+calibrated uncertainty claims.
+
+The independent demo environment pins LogPSplinePSD and GapLike. Published
+paper environments are unchanged. Historical scripts and notes remain under
+source control for reproducibility; use the four notebooks for the tutorials.
+
+## Development
+
+```sh
+uv run --no-sync pytest -q
+uv run --no-sync ruff check .
+uv run --no-sync ruff format --check .
+uv run --no-sync jupyter-book build docs --warningiserror
+uv run --no-sync python scripts/check_docs.py docs/_build/html
+```
+
+CI executes the four notebooks with a fresh kernel for each and builds the
+docs from saved outputs. The website retains the library's theme and a
+persistent **Back to LogPSplinePSD** button.

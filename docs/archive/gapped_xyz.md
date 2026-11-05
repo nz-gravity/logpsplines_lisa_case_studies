@@ -84,7 +84,7 @@ and explicitly extend the covariance to XYZ. The
 
 ## Saved standard result, seed 7
 
-![Reference-corrected multivariate spline recovery](assets/seven_day_xyz.png)
+![Reference-corrected multivariate spline recovery](../assets/seven_day_xyz.png)
 
 ```{include} assets/seven_day_errors.md
 ```
@@ -104,8 +104,8 @@ unconstrained splines discovering response zeros.
 
 All standard-run rows and restarts satisfy the stated ELBO plateau check.
 The maximum restart disagreement in reconstructed auto spectra is about
-0.0016 dex. [ELBO traces](assets/seven_day_elbo.png) and the
-[detailed diagnostics](assets/seven_day_errors.json) accompany the result.
+0.0016 dex. [ELBO traces](../assets/seven_day_elbo.png) and the
+[detailed diagnostics](../assets/seven_day_errors.json) accompany the result.
 These are numerical checks of exploratory VI, not proof of posterior
 accuracy or NUTS-equivalent uncertainty.
 
@@ -131,7 +131,7 @@ NUTS recommendation follows from this single simulation.
   `recovery.npz`: the exact compressed control and its real simulated data.
 - `run.json`: versions, source hashes, approximations and validation settings.
 
-The [saved receipt](assets/seven_day_run.json) records the source version.
+The [saved receipt](../assets/seven_day_run.json) records the source version.
 Use `--benchmark-only` to run the exact control alone. `--quick` keeps all
 seven days and all native bins in the main fit, with shorter VI, fewer stored
 draws, fewer source bands and a smaller exact benchmark.

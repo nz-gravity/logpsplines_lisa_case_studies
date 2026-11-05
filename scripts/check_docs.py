@@ -32,13 +32,12 @@ pages = [
     for name in (
         "intro",
         "running",
-        "time_varying",
-        "xyz",
-        "gapped_xyz",
-        "likelihood",
-        "reference_matrix",
+        "notebooks/01_generate_data",
+        "notebooks/02_time_varying_psd",
+        "notebooks/03_xyz_psd",
+        "notebooks/04_short_xyz_gaps",
+        "notebook_models",
         "gaplike_xyz",
-        "models",
     )
 ]
 for page in pages:

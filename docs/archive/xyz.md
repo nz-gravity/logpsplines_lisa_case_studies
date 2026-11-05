@@ -13,7 +13,7 @@ including cross spectra, with two NumPyro NUTS chains.
 uv run lisa-demo-xyz --output outputs/xyz_standard
 ```
 
-![Parametric XYZ recovery](assets/xyz_parametric_noise.png)
+![Parametric XYZ recovery](../assets/xyz_parametric_noise.png)
 
 The example uses the library's Wishart likelihood through a small full-matrix
 adapter. Fixed nominal whitening preserves the likelihood up to a

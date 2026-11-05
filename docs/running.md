@@ -1,79 +1,75 @@
 # Install and run
 
+The notebooks are already executed on this website. To change a setting or
+rerun a lesson, use the download button at the top of its page or open the
+notebooks in a repository checkout.
+
+## One environment for all four notebooks
+
 Requires Python 3.12+ and [uv](https://docs.astral.sh/uv/).
-Each example creates its own seeded simulation and refuses to overwrite an
-existing output directory.
 
 ```sh
 git clone https://github.com/nz-gravity/logpsplines_lisa_case_studies.git
 cd logpsplines_lisa_case_studies
-git checkout 6837a066c46afce78ff9cd58d372a1ae5ba0ac37
-uv sync --locked --extra gapped
-uv run --extra gapped lisa-demo-gaps --output outputs/seven_day
+git checkout f7fa624323db7dc2c1166d7f0185eaf8e02c1073
+uv sync --locked --extra gapped --group notebooks --group docs
+uv run --no-sync jupyter lab docs/notebooks
 ```
 
-The checkout selects the illustrated scientific version, including while
-[PR #1](https://github.com/nz-gravity/logpsplines_lisa_case_studies/pull/1) awaits merge.
+The checkout selects the illustrated notebook version, including while
+[PR #1](https://github.com/nz-gravity/logpsplines_lisa_case_studies/pull/1)
+awaits merge. Use the project `.venv` Python as the notebook kernel.
 
-The default seven-day case runs offline Keplerian orbits, a full matrix
-reference correction, adaptive coarse-graining and marginalised-theta VI.
-It also reruns the exact compressed Gaussian gap benchmark on the same record.
-Three VI restarts use 6,000 updates per Cholesky row and 256 stored draws.
+## Reading and execution order
+
+1. **[Generate the data](notebooks/01_generate_data.ipynb)** first. It writes
+   the shared seeded time series and observation windows.
+2. Choose **[time-varying channel A](notebooks/02_time_varying_psd.ipynb)**
+   or **[standard XYZ](notebooks/03_xyz_psd.ipynb)**.
+3. Continue to **[short-duration XYZ with gaps](notebooks/04_short_xyz_gaps.ipynb)**
+   for the orbit reference, adaptive bins and exact covariance check.
+
+Each estimation notebook has its own imports and loads the saved input files.
+It does not rely on variables left in another kernel. Use **Restart Kernel
+and Run All Cells** to check a clean execution. If a dataset is missing, the
+notebook tells you to run notebook 1.
+
+All inputs and fitted arrays are written under `outputs/notebooks/`, which
+is ignored by Git. Rerunning notebook 1 regenerates its seeded data. Downloading
+one notebook alone is useful for reading; executing it also requires the
+checkout's small simulation helpers and shared data.
+
+## Execute everything without JupyterLab
 
 ```sh
-uv run --extra gapped lisa-demo-gaps --quick --output outputs/seven_day_quick
-uv run --extra gapped lisa-demo-gaps --benchmark-only --output outputs/benchmark
+uv run --no-sync python scripts/execute_notebooks.py
 ```
 
-Quick mode keeps the full seven days at five-second cadence and uses all
-59,634 native main-fit frequencies. It shortens VI to 1,500 updates per row
-and 64 stored draws, and uses fewer source bands and benchmark features.
-It checks execution, not posterior accuracy.
+This executes the notebooks in order with a fresh project-environment kernel
+for each, saving figures, tables and execution counts in the `.ipynb` files.
+The execution time depends on your machine; the notebooks use VI to keep
+the examples small. There is no hidden NUTS job or cluster submission.
 
-`--vi-steps` changes updates per row and `--vi-restarts` changes the restart
-count (at least two). All entry points accept `--seed` and `--output`; the
-numbered scripts call the same implementations. The optional `--orbit esa`
-path downloads lisaorbits' ESA trailing ephemerides; the published example
-uses Keplerian orbits.
+## Reproducibility and limits
 
-## Introductory cases
+`pyproject.toml` pins LogPSplinePSD and GapLike to exact Git commits;
+`uv.lock` fixes the notebook environment. The source generator hash and
+package versions are recorded beside the generated data. No published paper
+environment is changed. All examples estimate channel PSDs and spectral
+matrices, rather than instrument-noise component levels.
 
-These need no optional orbit or gap dependencies:
+Read the [simulation and likelihood notes](notebook_models.md) for the
+observation approximations and the scope of the exact benchmark.
+[GapLike and correlated XYZ](gaplike_xyz.md) explains why a scalar
+independent-channel likelihood cannot simply be applied to XYZ.
+
+## Build this website
 
 ```sh
-uv run lisa-demo-time --quick --output outputs/time_quick
-uv run lisa-demo-xyz --quick --output outputs/xyz_quick
+uv run --no-sync jupyter-book build docs --warningiserror
+uv run --no-sync python scripts/check_docs.py docs/_build/html
 ```
 
-Omit `--quick` for their illustrated settings. The scalar case is a
-local-coefficient VI example; the basic XYZ case is a two-parameter NUTS fit.
-Neither is the full seven-day matrix reconstruction.
-
-## Reproducibility
-
-`pyproject.toml` pins LogPSplinePSD and GapLike to exact Git commits and
-`uv.lock` fixes this independent environment. The newer library pin is used
-only here; no published paper reproduction environment is changed.
-Each `run.json` records settings, source hashes and limitations. The exact
-benchmark has a separate `benchmark_run.json`. Curated previews and receipts
-are in `docs/assets/`; generated time series and fit arrays stay in `outputs/`.
-
-`*_correction.nc` contains a library HDF5-backed `PSDResult`, not a generic
-NetCDF-4 file. Read it with `PSDResult.from_netcdf`. Its spectra are in
-reference coordinates and its frequency axis uses log-frequency spline
-coordinates. Physical native-frequency reconstructions and the observation
-references are saved separately in `matrix_recovery.npz`.
-
-## Checks and documentation
-
-```sh
-uv run --extra gapped pytest -q
-uv run ruff check .
-uv run ruff format --check .
-uv run --group docs jupyter-book build docs --warningiserror
-```
-
-The website uses the library's Jupyter Book / Sphinx Book Theme and logo.
-It builds from committed results without running inference. Pull requests
-build the site and run scientific tests plus the seven-day quick case;
-`main` publishes to GitHub Pages.
+The book displays committed notebook outputs and does not run inference
+while building. It shares the library's Jupyter Book theme, logo and return
+navigation. Older case-study page URLs redirect to the corresponding notebooks.

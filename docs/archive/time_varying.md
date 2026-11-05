@@ -14,7 +14,7 @@ tensor log-P-spline and a stationary, constant-time-basis spline. Every fourth
 time row is held out by a fixed rule. Scaling and knots use training data or
 prespecified grids; evaluation truth never enters the fit.
 
-![Nonstationary A recovery](assets/time_varying_noise.png)
+![Nonstationary A recovery](../assets/time_varying_noise.png)
 
 VI summaries here are exploratory point reconstructions. They do not establish
 NUTS-equivalent posterior uncertainty. The script saves ELBO losses for inspection.
