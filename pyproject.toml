@@ -25,6 +25,7 @@ gapped = [
 
 [dependency-groups]
 dev = ["pytest>=8", "ruff>=0.12"]
+docs = ["jupyter-book==1.0.4.post1"]
 
 [project.scripts]
 lisa-demo-time = "lisa_case_studies.time_varying:main"
@@ -33,7 +34,7 @@ lisa-demo-gaps = "lisa_case_studies.gapped_xyz:main"
 
 [project.urls]
 Repository = "https://github.com/nz-gravity/logpsplines_lisa_case_studies"
-Documentation = "https://nz-gravity.github.io/LogPSplinePSD/"
+Documentation = "https://nz-gravity.github.io/logpsplines_lisa_case_studies/"
 Issues = "https://github.com/nz-gravity/logpsplines_lisa_case_studies/issues"
 
 [tool.setuptools.packages.find]
