@@ -26,6 +26,7 @@ gapped = [
 [dependency-groups]
 dev = ["pytest>=8", "ruff>=0.12"]
 docs = ["jupyter-book==1.0.4.post1"]
+notebooks = ["nbformat>=5.10", "nbclient>=0.10", "nbconvert>=7.16", "ipykernel>=6.29", "jupyterlab>=4.4,<5"]
 
 [project.scripts]
 lisa-demo-time = "lisa_case_studies.time_varying:main"
