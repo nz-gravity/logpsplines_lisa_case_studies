@@ -1,0 +1,22 @@
+format: jb-book
+root: intro
+parts:
+  - caption: Getting started
+    chapters:
+      - file: running
+  - caption: LISA case studies
+    chapters:
+      - file: time_varying
+        title: Nonstationary A noise
+      - file: xyz
+        title: Correlated XYZ noise
+      - file: gapped_xyz
+        title: Seven-day evolving XYZ with gaps
+  - caption: Reference
+    chapters:
+      - file: likelihood
+        title: Joint gap-aware likelihood
+      - file: models
+        title: Models and conventions
+      - url: https://nz-gravity.github.io/LogPSplinePSD/intro.html
+        title: LogPSplinePSD documentation ↗

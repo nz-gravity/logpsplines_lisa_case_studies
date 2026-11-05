@@ -2,11 +2,13 @@
 
 Repository: [nz-gravity/logpsplines_lisa_case_studies](https://github.com/nz-gravity/logpsplines_lisa_case_studies).
 
+Website: <https://nz-gravity.github.io/logpsplines_lisa_case_studies/>.
+
 Link description:
 
 > **LISA case studies** — runnable examples of nonstationary A-channel noise
-> recovery and correlated XYZ instrument-noise inference, including synthetic
-> data, comparison figures and saved run settings.
+> recovery, correlated XYZ inference, and seven-day evolving XYZ spline
+> recovery with a joint gap-aware likelihood.
 
 The library links here under **Where To Start** in
 `LogPSplinePSD/docs/intro.rst`, from the **Examples** sidebar in

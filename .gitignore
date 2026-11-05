@@ -6,5 +6,6 @@ __pycache__/
 .ruff_cache/
 outputs/
 build/
+docs/_build/
 dist/
 .DS_Store

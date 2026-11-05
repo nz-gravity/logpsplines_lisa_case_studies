@@ -1,133 +1,69 @@
 # LISA case studies for LogPSplinePSD
 
-Small, runnable examples for the [LogPSplinePSD documentation](https://nz-gravity.github.io/LogPSplinePSD/).
-Start with the first two cases; each makes its own seeded synthetic data,
-runs a fit, and saves a comparison figure and a reproducibility receipt.
-The third case is an orbit-response and gap-conditioning prototype. Default
-runs require no archived paper data, ephemeris download, or cluster account.
+[**Read the case studies →**](https://nz-gravity.github.io/logpsplines_lisa_case_studies/)
+ · [LogPSplinePSD docs](https://nz-gravity.github.io/LogPSplinePSD/intro.html)
 
-| Case | What it teaches | Run |
+Small, reproducible noise examples, from simple spectra to seven days of
+evolving, correlated XYZ data with time-domain gaps. The website uses the
+library's Jupyter Book theme and branding, with a persistent return button.
+
+| Case | Demonstration | Run |
 |---|---|---|
-| [Time-varying A noise](scripts/01_time_varying_noise.py) | Recover a changing PSD with a tensor log-P-spline; compare with a stationary spline on fixed held-out rows | `uv run lisa-demo-time` |
-| [Correlated XYZ noise](scripts/02_xyz_parametric_noise.py) | Fit acceleration and OMS noise levels with the full spectral matrix; inspect auto spectra, cross spectra and coherence | `uv run lisa-demo-xyz` |
-| [Orbit response and gaps — prototype](docs/gapped_xyz.md) | Seven-day orbit-derived TDI-2 reference and GapLike window conditioning; full per-bin XYZ point fits | `uv run --extra gapped lisa-demo-gaps` |
+| [Nonstationary A noise](docs/time_varying.md) | Tensor log-P-spline versus stationary spline on held-out rows | `uv run lisa-demo-time` |
+| [Correlated XYZ noise](docs/xyz.md) | Full spectral matrix, TM/OMS scales, two-parameter NUTS | `uv run lisa-demo-xyz` |
+| [Seven-day evolving XYZ](docs/gapped_xyz.md) | Keplerian TDI-2, spline secondary spectra, continuous/gapped observations, joint Gaussian MAP | `uv run --extra gapped lisa-demo-gaps` |
 
-## Quick start
+## Run the seven-day case
 
 Requires Python 3.12+ and [uv](https://docs.astral.sh/uv/).
 
 ```sh
 git clone https://github.com/nz-gravity/logpsplines_lisa_case_studies.git
 cd logpsplines_lisa_case_studies
-uv sync --locked
-uv run python scripts/01_time_varying_noise.py --quick
-uv run python scripts/02_xyz_parametric_noise.py --quick
+uv sync --locked --extra gapped
+uv run --extra gapped lisa-demo-gaps --output outputs/seven_day
 ```
 
-`--quick` is a small execution check. For the illustrated settings, run the
-commands without it and choose fresh output directories if outputs exist:
+Both standard and `--quick` modes simulate 120,960 samples at a five-second
+cadence. Standard mode fits 48 Fourier bins / 288 real features with 32
+source-frequency bands. All fits use the same seven cubic basis functions
+per secondary component, fixed priors, evaluation support and three
+optimization restarts. Four independent realizations check predictions.
+Existing output directories are never overwritten; use `--seed` and `--output`.
+The numbered scripts in `scripts/` call the same entry points.
+
+![Seven-day spline recovery](docs/assets/seven_day_xyz.png)
+
+The evolving orbit filters act on a shared link-noise realization. The
+likelihood propagates the actual gaps/windows and includes XYZ,
+frequency, quadrature and epoch correlations. It is exact **for the fixed
+compressed features under the declared quasi-static simulator**, rather
+than for the entire time series. The moving response determines dip
+locations; splines learn smooth secondary spectra. See the
+[method, results and limitations](docs/gapped_xyz.md) and
+[likelihood derivation](docs/likelihood.md).
+
+These are MAP point reconstructions, without posterior uncertainty claims.
+This teaching simulation adapts the short-segment response idea from
+[Burke et al., Noisy Pipelines I](https://arxiv.org/html/2610.28726v1);
+it is not a reproduction of their instrument/conditioning pipeline.
+
+## Reproducibility and development
+
+LogPSplinePSD and GapLike are pinned to exact Git commits; `uv.lock` fixes a
+separate demo environment. Published paper environments are not changed.
+Outputs include the real data, masks, basis/penalty, fitted spectral matrices,
+error table, optimization diagnostics and a version/source-hash receipt.
+Large generated arrays stay in ignored `outputs/`; curated previews and
+receipts are committed under `docs/assets/`.
 
 ```sh
-uv run lisa-demo-time --output outputs/time_standard
-uv run lisa-demo-xyz --output outputs/xyz_standard
-```
-
-Both scripts accept `--seed` and `--output`. Existing output directories are
-never overwritten. The console entry points and numbered scripts run the
-same code. The library is pinned to an exact Git commit in `pyproject.toml`;
-`uv.lock` fixes the separate demo environment. The paper reproduction
-environment is not used or changed.
-
-## 1. Nonstationary A-channel instrument noise
-
-The acceleration and optical-metrology-system (OMS) components have
-different, smooth time-dependent PSD multipliers. The example generates
-independent local real Gaussian coefficients, sums their squared values,
-and fits `PowerData` with `PowerConfig(method="vi")`. It compares a
-time-varying tensor model with the constant-time-basis stationary model.
-
-Every fourth time row is held out using a fixed rule. Truth is used only for
-plots and recovery scores. Neither truth nor held-out powers sets the
-numerical scaling or spline knots. VI output is an exploratory point
-reconstruction; no calibrated uncertainty claim is made.
-
-![Time-varying noise example](docs/assets/time_varying_noise.png)
-
-Outputs include `comparison.png`, `data.npz`, two `PSDResult` files,
-`elbo.npz`, `errors.json` and `run.json`. The `.nc` files use LogPSplinePSD's
-HDF5-backed result format: read them with `PSDResult.from_netcdf`. Their
-spectra use the numerical normalization recorded as `data.npz["scale"]`;
-multiply by that value for physical PSD units. The figure and saved point
-estimates in `data.npz` are already in physical units.
-
-## 2. Parametric, correlated XYZ instrument noise
-
-The equal-arm covariance is
-
-`S_XYZ(f) = acc_psd_scale × S_acc(f) + oms_psd_scale × S_oms(f)`.
-
-The two scales multiply **PSD**, not amplitude spectral density. The script
-simulates proper complex Gaussian XYZ vectors and fits both positive noise
-scales with two NumPyro NUTS chains. Its model includes the full covariance,
-including cross spectra. Known-baseline whitening improves conditioning and
-preserves the matrix likelihood up to a parameter-independent constant.
-
-`ParametricSpectrum` in the pinned library handles independent channel
-powers. This example instead supplies a small full-matrix adapter using the
-library's `wishart_log_likelihood` and NUTS runner. It does not treat XYZ as
-independent. Equal arms make the injected cross spectra real; complex sample
-cross spectra still fluctuate around that value.
-
-![XYZ parametric noise example](docs/assets/xyz_parametric_noise.png)
-
-Outputs include `comparison.png`, `data.npz`, `posterior.nc`,
-`sample_stats.nc`, `parameters.json` and `run.json`. The receipt records
-R-hat, effective sample size and divergences. Quick-mode draw summaries are
-for execution checking; inspect diagnostics and chain agreement before
-interpreting posterior uncertainty.
-
-## Scope and next cases
-
-The first two cases use a deliberately simple observation model:
-equal-arm, first-generation Michelson instrumental spectra with SciRDv1 noise
-levels. They simulate independent spectral coefficients directly, rather
-than running a time-domain TDI simulator or a WDM transform. The illustrative
-time drift is prescribed, not an orbital noise prediction. See
-[model conventions and sources](docs/models.md).
-
-The [seven-day gaps prototype and implementation notes](docs/gapped_xyz.md)
-start the orbit-response and gap-conditioning work. This does not yet claim
-validated time-varying spline recovery with gaps.
-
-The next additions I would make are:
-
-1. A multivariate **spline reconstruction of the same XYZ data**, using the
-   parametric spectrum as a baseline and deliberately misspecifying it.
-2. A Galactic foreground plus instrument-noise example with orbital
-   modulation, building on the [time-varying paper reproduction](https://github.com/nz-gravity/lisa_timevarying_logpsplines_study).
-3. A gapped-data case that preserves time coordinates and transform masks.
-
-Keep paper-scale sensitivity studies and cluster jobs in their study repos;
-link them from here. This repo should remain easy to install and quick to run.
-
-## Development
-
-```sh
-uv run pytest -q
+uv run --extra gapped pytest -q
 uv run ruff check .
 uv run ruff format --check .
+uv run --group docs jupyter-book build docs --warningiserror
 ```
 
-Tests check the analytic XYZ formulas, coefficient normalization, positive
-definiteness, and the full matrix likelihood and gradients against an
-independent log-determinant/solve calculation. Large output files are ignored;
-the two small README previews are retained in `docs/assets/`.
-
-With `uv sync --extra gapped --locked`, `uv run --extra gapped pytest -q`
-also runs the orbit-response and GapLike integration checks. The gap prototype
-retains its own clearly labeled preview in the implementation notes.
-
-The case studies live at
-[nz-gravity/logpsplines_lisa_case_studies](https://github.com/nz-gravity/logpsplines_lisa_case_studies).
-The [library-link note](docs/link_from_library.md) records the links from the
-LogPSplinePSD documentation and README.
+Tests include an independent dense time-domain check of the nonstationary
+gap covariance and a dense likelihood/prior/gradient check. CI tests pull
+requests and builds the website; `main` publishes to GitHub Pages.
