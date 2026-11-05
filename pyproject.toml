@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lisa-logpsplines-case-studies"
+version = "0.1.0"
+description = "Small, reproducible LISA noise examples for LogPSplinePSD"
+requires-python = ">=3.12"
+dependencies = [
+  "LogPSplinePSD @ git+https://github.com/nz-gravity/LogPSplinePSD.git@468092798cafd3b97415e319cc0280d218eb271a",
+  "numpy>=2.4,<3",
+  "scipy>=1.17",
+  "jax==0.9.1",
+  "numpyro==0.20.0",
+  "matplotlib>=3.10",
+]
+
+[dependency-groups]
+dev = ["pytest>=8", "ruff>=0.12"]
+
+[project.scripts]
+lisa-demo-time = "lisa_case_studies.time_varying:main"
+lisa-demo-xyz = "lisa_case_studies.xyz:main"
+
+[project.urls]
+Repository = "https://github.com/nz-gravity/logpsplines_lisa_case_studies"
+Documentation = "https://nz-gravity.github.io/LogPSplinePSD/"
+Issues = "https://github.com/nz-gravity/logpsplines_lisa_case_studies/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

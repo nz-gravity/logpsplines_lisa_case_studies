@@ -1,0 +1,64 @@
+{
+  "created_utc": "2026-11-05T00:00:06.678313+00:00",
+  "source_commit": null,
+  "source_sha256": {
+    "src/lisa_case_studies/__init__.py": "0d6247914282baf518749f438925856bb94f2c50d6a8f6cc3af3016fa93dda12",
+    "src/lisa_case_studies/common.py": "98818b4785c621ce654cde0fe68a583203b1bd5ec48efd697041c5dc9bcce50c",
+    "src/lisa_case_studies/noise.py": "0e287182e3db0d66e6bd4d9f48f3e8f98077c34554efdf01440d15a2b1f30ad2",
+    "src/lisa_case_studies/time_varying.py": "715894e45a3cee49e323309c1ca79e4188ed938a5ce2fb8eb01293760bc49a9d",
+    "src/lisa_case_studies/xyz.py": "46bd450d4e1d55c0bf735484def56c5c13058dbd9ec66741da01d3265cfe49c6"
+  },
+  "dependencies": {
+    "LogPSplinePSD": "1.0.2.dev1+g468092798",
+    "numpy": "2.5.4",
+    "jax": "0.9.1",
+    "numpyro": "0.20.0"
+  },
+  "case": "XYZ_parametric_instrument",
+  "seed": 7,
+  "quick": false,
+  "simulation": "Independent proper-complex local Fourier coefficients; equal-arm first-generation Michelson approximation",
+  "parameters": {
+    "acc_psd_scale": {
+      "injected": 1.6,
+      "median": 1.6006555862214942,
+      "q05": 1.5601746848990876,
+      "q95": 1.6383067908948212
+    },
+    "oms_psd_scale": {
+      "injected": 0.7,
+      "median": 0.6904089649969734,
+      "q05": 0.6778940083647811,
+      "q95": 0.7033768582282476
+    }
+  },
+  "replicates": 32,
+  "n_warmup": 400,
+  "n_samples": 600,
+  "chains": 2,
+  "diagnostics": {
+    "log_acc_psd_scale": {
+      "mean": 0.46951856576668094,
+      "std": 0.01468214418127063,
+      "median": 0.4704132867130899,
+      "5.0%": 0.4465795683878707,
+      "95.0%": 0.49506020015333924,
+      "n_eff": 863.0355156087911,
+      "r_hat": 1.0018040729045836
+    },
+    "log_oms_psd_scale": {
+      "mean": -0.3699504204173719,
+      "std": 0.010895793949549218,
+      "median": -0.370471154075654,
+      "5.0%": -0.386089349302184,
+      "95.0%": -0.35023289146917735,
+      "n_eff": 926.6912950156279,
+      "r_hat": 1.0010182805167056
+    }
+  },
+  "divergences": 0,
+  "max_tree_depth": 8,
+  "tree_depth_limit_hits": 0,
+  "truth_auto_log10_rmse": 0.003590404649715528,
+  "interpretation": "Quick mode checks execution only; inspect R-hat, ESS, divergences and chain agreement before interpreting posterior uncertainty"
+}
