@@ -148,7 +148,20 @@ def main():
 
     cli = parser(__doc__, "outputs/03_seven_day_xyz")
     cli.add_argument("--orbit", choices=["keplerian", "esa"], default="keplerian")
+    cli.add_argument(
+        "--benchmark-only",
+        action="store_true",
+        help="Run only the exact compressed Gaussian control",
+    )
+    cli.add_argument(
+        "--vi-steps",
+        type=int,
+        help="VI updates per Cholesky row and restart (default: 1500 quick / 6000 standard)",
+    )
+    cli.add_argument("--vi-restarts", type=int, default=3)
     args = cli.parse_args()
+    if args.vi_restarts < 2 or (args.vi_steps is not None and args.vi_steps < 500):
+        cli.error("use at least two VI restarts and at least 500 VI steps")
     create_output(args.output)
     started = timer.monotonic()
     duration, dt = 7 * DAY, 5.0
@@ -344,6 +357,27 @@ def main():
         injected_covariance_control=oracle,
     )
     print("\n".join(table), flush=True)
+    if not args.benchmark_only:
+        from .multivar_case import run_comparison
+
+        for filename in ("comparison.png", "errors.json", "errors.md", "run.json"):
+            (args.output / filename).rename(args.output / f"benchmark_{filename}")
+        run_comparison(
+            args.output,
+            sim,
+            windows,
+            series,
+            injected,
+            times,
+            evaluate_bins,
+            truth,
+            spectra,
+            errors,
+            seed=args.seed,
+            quick=args.quick,
+            steps=args.vi_steps,
+            restarts=args.vi_restarts,
+        )
 
 
 def plot_comparison(

@@ -4,6 +4,7 @@ import numpy as np
 
 from lisa_case_studies.joint_gaussian import (
     TVSimulator,
+    conditioned_reference,
     covariance_bank,
     feature_vector,
     link_psds,
@@ -119,3 +120,27 @@ def test_map_objective_and_stationarity_match_independent_dense_calculation():
         for d in np.eye(weights.size)
     ]
     assert np.max(np.abs(gradient)) < 2e-4
+
+
+def test_conditioned_reference_matches_joint_complex_marginals():
+    sim, centres, _ = small_simulator()
+    continuous = np.hanning(sim.n)
+    gapped = continuous.copy()
+    gapped[9:14] = 0
+    windows = dict(continuous=continuous, gapped=gapped)
+    bins = np.array([2, 3, 7])
+    references = conditioned_reference(sim, windows)
+    banks = covariance_bank(sim, windows, bins, len(centres))
+    half = 3 * len(bins)
+    for name, bank in banks.items():
+        c = bank.sum(axis=(0, 1))
+        complex_cov = (
+            c[:half, :half] + c[half:, half:] + 1j * (c[half:, :half] - c[:half, half:])
+        )
+        for i, k in enumerate(bins):
+            actual = references[name][k]
+            expected = complex_cov[3 * i : 3 * i + 3, 3 * i : 3 * i + 3]
+            scale = np.max(np.abs(expected))
+            np.testing.assert_allclose(
+                actual / scale, expected / scale, rtol=1e-11, atol=1e-12
+            )

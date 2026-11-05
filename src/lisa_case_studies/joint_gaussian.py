@@ -178,3 +178,55 @@ def whiten_bank(bank):
     whitened = np.einsum("ia,ckab,jb->ckij", whitening, bank, whitening, optimize=True)
     whitened = 0.5 * (whitened + whitened.swapaxes(-1, -2))
     return whitened, whitening, float(np.linalg.cond(normalized))
+
+
+def conditioned_reference(simulator, windows, *, progress=None):
+    """All same-frequency complex covariances of the nominal TV simulator.
+
+    Retain every epoch cross term using FFT convolutions, but compute only
+    diagonal frequency blocks. This is a reference for an APPROXIMATE
+    independent-bin residual model, not the full joint Gaussian likelihood.
+    Normalization matches feature_vector, including the actual window power.
+    """
+    n = simulator.n
+    f = simulator.frequency
+    window_ffts = {
+        name: np.fft.fft(simulator.weights * np.asarray(w)[None, :], axis=1) / n
+        for name, w in windows.items()
+    }
+    transfers = np.asarray(
+        [link_transfers(f[1:], delays) for delays in simulator.delays]
+    )
+    transfers[:, :, -1] = transfers[:, :, -1].real
+    power = link_psds(f[1:])
+    outputs = {name: np.zeros((n, 3, 3), complex) for name in windows}
+    total = len(simulator.epochs) * (len(simulator.epochs) + 1) // 2
+    done = 0
+    for e in range(len(simulator.epochs)):
+        for d in range(e + 1):
+            positive = np.einsum(
+                "cfis,cfjs,cf->fij",
+                transfers[e],
+                transfers[d].conj(),
+                power,
+                optimize=True,
+            )
+            full = np.concatenate(
+                [np.zeros((1, 3, 3)), positive, positive[-2::-1].conj()], axis=0
+            )
+            transformed = np.fft.fft(full, axis=0)
+            for name, wf in window_ffts.items():
+                kernel = wf[e] * wf[d].conj()
+                value = np.fft.ifft(
+                    transformed * np.fft.fft(kernel)[:, None, None], axis=0
+                )
+                outputs[name] += (
+                    value if e == d else value + value.conj().swapaxes(-1, -2)
+                )
+            done += 1
+            if progress is not None:
+                progress(done, total)
+    return {
+        name: 0.5 * (value[: len(f)] + value[: len(f)].conj().swapaxes(-1, -2))
+        for name, value in outputs.items()
+    }

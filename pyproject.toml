@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "Small, reproducible LISA noise examples for LogPSplinePSD"
 requires-python = ">=3.12"
 dependencies = [
-  "LogPSplinePSD @ git+https://github.com/nz-gravity/LogPSplinePSD.git@468092798cafd3b97415e319cc0280d218eb271a",
+  "LogPSplinePSD @ git+https://github.com/nz-gravity/LogPSplinePSD.git@132bc478aee7bb4de87259531e4c4a24b7f18d2f",
   "numpy>=2.4,<3",
   "scipy>=1.17",
   "jax==0.9.1",

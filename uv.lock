@@ -1490,7 +1490,7 @@ requires-dist = [
     { name = "gaplike", marker = "extra == 'gapped'", git = "https://github.com/gaplike/gaplike.git?rev=99c61931f3f47997d589f255191052ccdbb79f97" },
     { name = "jax", specifier = "==0.9.1" },
     { name = "lisaorbits", marker = "extra == 'gapped'", specifier = "==3.0.3" },
-    { name = "logpsplinepsd", git = "https://github.com/nz-gravity/LogPSplinePSD.git?rev=468092798cafd3b97415e319cc0280d218eb271a" },
+    { name = "logpsplinepsd", git = "https://github.com/nz-gravity/LogPSplinePSD.git?rev=132bc478aee7bb4de87259531e4c4a24b7f18d2f" },
     { name = "matplotlib", specifier = ">=3.10" },
     { name = "numpy", specifier = ">=2.4,<3" },
     { name = "numpyro", specifier = "==0.20.0" },
@@ -1576,8 +1576,8 @@ wheels = [
 
 [[package]]
 name = "logpsplinepsd"
-version = "1.0.2.dev1+g468092798"
-source = { git = "https://github.com/nz-gravity/LogPSplinePSD.git?rev=468092798cafd3b97415e319cc0280d218eb271a#468092798cafd3b97415e319cc0280d218eb271a" }
+version = "1.1.1.dev1+g132bc478a"
+source = { git = "https://github.com/nz-gravity/LogPSplinePSD.git?rev=132bc478aee7bb4de87259531e4c4a24b7f18d2f#132bc478aee7bb4de87259531e4c4a24b7f18d2f" }
 dependencies = [
     { name = "arviz-base", extra = ["netcdf4", "zarr"] },
     { name = "arviz-plots", extra = ["matplotlib"] },
