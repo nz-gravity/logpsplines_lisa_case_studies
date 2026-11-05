@@ -1,0 +1,270 @@
+{
+  "created_utc": "2026-11-05T02:25:37.985550+00:00",
+  "source_commit": "3b4f6107cebde81f113326f9f50431f8a24bf711",
+  "source_sha256": {
+    "src/lisa_case_studies/__init__.py": "0d6247914282baf518749f438925856bb94f2c50d6a8f6cc3af3016fa93dda12",
+    "src/lisa_case_studies/common.py": "98818b4785c621ce654cde0fe68a583203b1bd5ec48efd697041c5dc9bcce50c",
+    "src/lisa_case_studies/gapped_xyz.py": "dd2ecd77db0d068c2eb7b6cf67f97e7fde084f70ed159c2d8a48e72a41eae168",
+    "src/lisa_case_studies/joint_gaussian.py": "1b644aec434099ea59dee39638bebaac9073e085e43bb9339b952745da13832c",
+    "src/lisa_case_studies/noise.py": "0e287182e3db0d66e6bd4d9f48f3e8f98077c34554efdf01440d15a2b1f30ad2",
+    "src/lisa_case_studies/orbit_reference.py": "80d39260555bc9459b629a1d5775f8dd919989fa067648d05ee3d0638a5b91b5",
+    "src/lisa_case_studies/spline_recovery.py": "a6c5a363f81abc673a1f831dcf17ddc73ed957b9a91297a9c148e84e83974b1d",
+    "src/lisa_case_studies/stationary_gap_control.py": "9aaee5c860c240b2ebd5aca720f7868407f3e4abd70af16a8b1d2e30e80e5405",
+    "src/lisa_case_studies/time_varying.py": "715894e45a3cee49e323309c1ca79e4188ed938a5ce2fb8eb01293760bc49a9d",
+    "src/lisa_case_studies/xyz.py": "46bd450d4e1d55c0bf735484def56c5c13058dbd9ec66741da01d3265cfe49c6"
+  },
+  "dependencies": {
+    "LogPSplinePSD": "1.0.2.dev1+g468092798",
+    "numpy": "2.5.4",
+    "jax": "0.9.1",
+    "numpyro": "0.20.0"
+  },
+  "case": "seven_day_time_varying_xyz_spline",
+  "seed": 7,
+  "quick": false,
+  "duration_days": 7,
+  "dt_seconds": 5.0,
+  "n_samples": 120960,
+  "epochs": 8,
+  "orbit_model": "keplerian",
+  "orbit_origin_seconds": 7776000.0,
+  "directed_link_order": [
+    12,
+    23,
+    31,
+    13,
+    32,
+    21
+  ],
+  "source_frequency_bands": 32,
+  "spline_functions_per_component": 7,
+  "selected_bins": [
+    242,
+    283,
+    331,
+    388,
+    454,
+    532,
+    622,
+    728,
+    853,
+    998,
+    1168,
+    1368,
+    1601,
+    1874,
+    2193,
+    2567,
+    3005,
+    3518,
+    4118,
+    4820,
+    5642,
+    6604,
+    7730,
+    9049,
+    10592,
+    12398,
+    14513,
+    16988,
+    18142,
+    18143,
+    18144,
+    18145,
+    19885,
+    23277,
+    27246,
+    31893,
+    36286,
+    36287,
+    36288,
+    36289,
+    37332,
+    43699,
+    51152,
+    54430,
+    54431,
+    54432,
+    54433,
+    59875
+  ],
+  "real_feature_dimension": 288,
+  "gap_intervals_seconds": [
+    [
+      129600.0,
+      144000.0
+    ],
+    [
+      367200.0,
+      388800.0
+    ]
+  ],
+  "duty_cycle": 0.9404761904761905,
+  "validation_seeds": [
+    1007,
+    1008,
+    1009,
+    1010
+  ],
+  "gaplike_commit": "99c61931f3f47997d589f255191052ccdbb79f97",
+  "run_seconds": 6.524956207998912,
+  "likelihood": "Exact joint real Gaussian for fixed compressed Fourier features of the declared discretized time-varying simulator; all XYZ/frequency/quadrature/epoch correlations included",
+  "prior": "Two independent natural-log PSD correction vectors; precision 10 * library trace-normalized derivative penalty + I/0.8^2; fixed before seeing truth/data",
+  "limitations": [
+    "Quasi-static interpolated TDI-2 frequency response, not noncommuting time-delay TDI or a lisainstrument simulation",
+    "Stationary secondary noise with orbit-induced output nonstationarity; no time spline inferred",
+    "Smooth corrections are piecewise constant in declared source-frequency bands; native-bin transfer resolution retained",
+    "Likelihood exact only for retained features, not the full time series; no filtering/decimation/aliasing chain",
+    "MAP point reconstruction, not VI, NUTS, posterior calibration or ensemble validation"
+  ],
+  "source_paper": "https://arxiv.org/html/2610.28726v1",
+  "reconstruction": {
+    "continuous": {
+      "auto_log10_rmse": 0.06326006952682496,
+      "auto_signed_log10_mean": 0.014054461131033614,
+      "channel_log10_rmse": [
+        0.0632600079510532,
+        0.06326027286128792,
+        0.06325992776761824
+      ],
+      "complex_cross_normalized_rmse": 0.03644138557919412,
+      "coherence_rmse": 0.00023444272008472193,
+      "nulls": {
+        "30": {
+          "auto_log10_rmse": 0.04977715815043852,
+          "signed_log10_mean": -0.04977715815002294,
+          "oscillation_rms": 1.670253119120579e-09,
+          "oscillation_definition": "RMS adjacent-frequency first difference of signed log10 residual; native weekly grid"
+        },
+        "60": {
+          "auto_log10_rmse": 0.029870971578005993,
+          "signed_log10_mean": 0.02987097156891196,
+          "oscillation_rms": 7.329037133705755e-09,
+          "oscillation_definition": "RMS adjacent-frequency first difference of signed log10 residual; native weekly grid"
+        },
+        "90": {
+          "auto_log10_rmse": 0.08812331490632887,
+          "signed_log10_mean": 0.0881233148956066,
+          "oscillation_rms": 1.198185170738802e-08,
+          "oscillation_definition": "RMS adjacent-frequency first difference of signed log10 residual; native weekly grid"
+        }
+      }
+    },
+    "gapped": {
+      "auto_log10_rmse": 0.07379924873572888,
+      "auto_signed_log10_mean": 0.01574292543802154,
+      "channel_log10_rmse": [
+        0.07379918179896587,
+        0.07379945226870838,
+        0.0737991121390753
+      ],
+      "complex_cross_normalized_rmse": 0.03295432156862357,
+      "coherence_rmse": 0.0001158906396806806,
+      "nulls": {
+        "30": {
+          "auto_log10_rmse": 0.06838293348780082,
+          "signed_log10_mean": -0.06838293348775167,
+          "oscillation_rms": 6.731935966505886e-10,
+          "oscillation_definition": "RMS adjacent-frequency first difference of signed log10 residual; native weekly grid"
+        },
+        "60": {
+          "auto_log10_rmse": 0.03601915681722453,
+          "signed_log10_mean": 0.036019156809772426,
+          "oscillation_rms": 7.285346499825126e-09,
+          "oscillation_definition": "RMS adjacent-frequency first difference of signed log10 residual; native weekly grid"
+        },
+        "90": {
+          "auto_log10_rmse": 0.10802847059218593,
+          "signed_log10_mean": 0.10802847058233614,
+          "oscillation_rms": 1.2715042307755346e-08,
+          "oscillation_definition": "RMS adjacent-frequency first difference of signed log10 residual; native weekly grid"
+        }
+      }
+    },
+    "gapped_independent_bins": {
+      "auto_log10_rmse": 0.06992942945778867,
+      "auto_signed_log10_mean": 0.010901199100795275,
+      "channel_log10_rmse": [
+        0.06992936731950339,
+        0.06992962321533018,
+        0.06992929783811282
+      ],
+      "complex_cross_normalized_rmse": 0.029814154552162735,
+      "coherence_rmse": 0.00011368866790634415,
+      "nulls": {
+        "30": {
+          "auto_log10_rmse": 0.07045856529498173,
+          "signed_log10_mean": -0.07045856529491024,
+          "oscillation_rms": 8.242746692066287e-10,
+          "oscillation_definition": "RMS adjacent-frequency first difference of signed log10 residual; native weekly grid"
+        },
+        "60": {
+          "auto_log10_rmse": 0.030230276516210262,
+          "signed_log10_mean": 0.030230276507908455,
+          "oscillation_rms": 7.044516991878438e-09,
+          "oscillation_definition": "RMS adjacent-frequency first difference of signed log10 residual; native weekly grid"
+        },
+        "90": {
+          "auto_log10_rmse": 0.09903158376385657,
+          "signed_log10_mean": 0.09903158375367369,
+          "oscillation_rms": 1.2378200649284203e-08,
+          "oscillation_definition": "RMS adjacent-frequency first difference of signed log10 residual; native weekly grid"
+        }
+      }
+    }
+  },
+  "independent_validation": {
+    "continuous": {
+      "mean_q_per_dimension": 0.9505725316405554,
+      "mean_nll_per_dimension": 0.5433523100047686,
+      "individual_q_per_dimension": [
+        0.948537756365331,
+        0.9812660083929694,
+        1.049694218843632,
+        0.8227921429602895
+      ]
+    },
+    "gapped": {
+      "mean_q_per_dimension": 1.0146392039123848,
+      "mean_nll_per_dimension": 0.5628847893797976,
+      "individual_q_per_dimension": [
+        1.0225754318551326,
+        1.024054844485492,
+        1.1158354016659402,
+        0.8960911376429743
+      ]
+    },
+    "gapped_independent_bins": {
+      "mean_q_per_dimension": 1.0199906024806782,
+      "mean_nll_per_dimension": 0.5625515168970092,
+      "individual_q_per_dimension": [
+        1.0272732590554747,
+        1.0298249841765184,
+        1.1216137794425811,
+        0.9012503872481391
+      ]
+    }
+  },
+  "injected_covariance_control": {
+    "continuous": {
+      "mean_q_per_dimension": 0.9668442854979564,
+      "mean_nll_per_dimension": 0.5407905783324645,
+      "individual_q_per_dimension": [
+        0.9602952772379675,
+        1.0050978026211503,
+        1.07401969728606,
+        0.8279643648466475
+      ]
+    },
+    "gapped": {
+      "mean_q_per_dimension": 1.007391320131471,
+      "mean_nll_per_dimension": 0.5610761949104495,
+      "individual_q_per_dimension": [
+        1.0054459224088943,
+        1.030067916726959,
+        1.1066264921106708,
+        0.8874249492793603
+      ]
+    }
+  }
+}

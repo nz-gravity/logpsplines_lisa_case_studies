@@ -1,0 +1,277 @@
+{
+  "reconstruction": {
+    "continuous": {
+      "auto_log10_rmse": 0.06326006952682496,
+      "auto_signed_log10_mean": 0.014054461131033614,
+      "channel_log10_rmse": [
+        0.0632600079510532,
+        0.06326027286128792,
+        0.06325992776761824
+      ],
+      "complex_cross_normalized_rmse": 0.03644138557919412,
+      "coherence_rmse": 0.00023444272008472193,
+      "nulls": {
+        "30": {
+          "auto_log10_rmse": 0.04977715815043852,
+          "signed_log10_mean": -0.04977715815002294,
+          "oscillation_rms": 1.670253119120579e-09,
+          "oscillation_definition": "RMS adjacent-frequency first difference of signed log10 residual; native weekly grid"
+        },
+        "60": {
+          "auto_log10_rmse": 0.029870971578005993,
+          "signed_log10_mean": 0.02987097156891196,
+          "oscillation_rms": 7.329037133705755e-09,
+          "oscillation_definition": "RMS adjacent-frequency first difference of signed log10 residual; native weekly grid"
+        },
+        "90": {
+          "auto_log10_rmse": 0.08812331490632887,
+          "signed_log10_mean": 0.0881233148956066,
+          "oscillation_rms": 1.198185170738802e-08,
+          "oscillation_definition": "RMS adjacent-frequency first difference of signed log10 residual; native weekly grid"
+        }
+      }
+    },
+    "gapped": {
+      "auto_log10_rmse": 0.07379924873572888,
+      "auto_signed_log10_mean": 0.01574292543802154,
+      "channel_log10_rmse": [
+        0.07379918179896587,
+        0.07379945226870838,
+        0.0737991121390753
+      ],
+      "complex_cross_normalized_rmse": 0.03295432156862357,
+      "coherence_rmse": 0.0001158906396806806,
+      "nulls": {
+        "30": {
+          "auto_log10_rmse": 0.06838293348780082,
+          "signed_log10_mean": -0.06838293348775167,
+          "oscillation_rms": 6.731935966505886e-10,
+          "oscillation_definition": "RMS adjacent-frequency first difference of signed log10 residual; native weekly grid"
+        },
+        "60": {
+          "auto_log10_rmse": 0.03601915681722453,
+          "signed_log10_mean": 0.036019156809772426,
+          "oscillation_rms": 7.285346499825126e-09,
+          "oscillation_definition": "RMS adjacent-frequency first difference of signed log10 residual; native weekly grid"
+        },
+        "90": {
+          "auto_log10_rmse": 0.10802847059218593,
+          "signed_log10_mean": 0.10802847058233614,
+          "oscillation_rms": 1.2715042307755346e-08,
+          "oscillation_definition": "RMS adjacent-frequency first difference of signed log10 residual; native weekly grid"
+        }
+      }
+    },
+    "gapped_independent_bins": {
+      "auto_log10_rmse": 0.06992942945778867,
+      "auto_signed_log10_mean": 0.010901199100795275,
+      "channel_log10_rmse": [
+        0.06992936731950339,
+        0.06992962321533018,
+        0.06992929783811282
+      ],
+      "complex_cross_normalized_rmse": 0.029814154552162735,
+      "coherence_rmse": 0.00011368866790634415,
+      "nulls": {
+        "30": {
+          "auto_log10_rmse": 0.07045856529498173,
+          "signed_log10_mean": -0.07045856529491024,
+          "oscillation_rms": 8.242746692066287e-10,
+          "oscillation_definition": "RMS adjacent-frequency first difference of signed log10 residual; native weekly grid"
+        },
+        "60": {
+          "auto_log10_rmse": 0.030230276516210262,
+          "signed_log10_mean": 0.030230276507908455,
+          "oscillation_rms": 7.044516991878438e-09,
+          "oscillation_definition": "RMS adjacent-frequency first difference of signed log10 residual; native weekly grid"
+        },
+        "90": {
+          "auto_log10_rmse": 0.09903158376385657,
+          "signed_log10_mean": 0.09903158375367369,
+          "oscillation_rms": 1.2378200649284203e-08,
+          "oscillation_definition": "RMS adjacent-frequency first difference of signed log10 residual; native weekly grid"
+        }
+      }
+    }
+  },
+  "independent_validation": {
+    "continuous": {
+      "mean_q_per_dimension": 0.9505725316405554,
+      "mean_nll_per_dimension": 0.5433523100047686,
+      "individual_q_per_dimension": [
+        0.948537756365331,
+        0.9812660083929694,
+        1.049694218843632,
+        0.8227921429602895
+      ]
+    },
+    "gapped": {
+      "mean_q_per_dimension": 1.0146392039123848,
+      "mean_nll_per_dimension": 0.5628847893797976,
+      "individual_q_per_dimension": [
+        1.0225754318551326,
+        1.024054844485492,
+        1.1158354016659402,
+        0.8960911376429743
+      ]
+    },
+    "gapped_independent_bins": {
+      "mean_q_per_dimension": 1.0199906024806782,
+      "mean_nll_per_dimension": 0.5625515168970092,
+      "individual_q_per_dimension": [
+        1.0272732590554747,
+        1.0298249841765184,
+        1.1216137794425811,
+        0.9012503872481391
+      ]
+    }
+  },
+  "injected_covariance_control": {
+    "continuous": {
+      "mean_q_per_dimension": 0.9668442854979564,
+      "mean_nll_per_dimension": 0.5407905783324645,
+      "individual_q_per_dimension": [
+        0.9602952772379675,
+        1.0050978026211503,
+        1.07401969728606,
+        0.8279643648466475
+      ]
+    },
+    "gapped": {
+      "mean_q_per_dimension": 1.007391320131471,
+      "mean_nll_per_dimension": 0.5610761949104495,
+      "individual_q_per_dimension": [
+        1.0054459224088943,
+        1.030067916726959,
+        1.1066264921106708,
+        0.8874249492793603
+      ]
+    }
+  },
+  "optimization": {
+    "continuous": {
+      "method": "MAP point optimization; no posterior uncertainty",
+      "objective": 165.75836591467458,
+      "restart_objectives": [
+        165.75836591467458,
+        165.75836591467458,
+        165.75836591467538
+      ],
+      "max_abs_gradients": [
+        1.4556708112511973e-06,
+        1.2804818079277194e-06,
+        1.8837678005979317e-06
+      ],
+      "iterations": [
+        17,
+        19,
+        19
+      ],
+      "restart_objective_range": 7.958078640513122e-13,
+      "nominal_correlation_condition": 129084.04747260483,
+      "weights": [
+        [
+          -0.009913734027108415,
+          -0.012706581981091218,
+          -0.06148393791378061,
+          0.25410566885569397,
+          0.5861783126842149,
+          0.11035373406220861,
+          -0.03212752532142713
+        ],
+        [
+          -0.0017711495914799291,
+          -0.005921610250331795,
+          -0.04113162653393303,
+          0.09067183917529506,
+          0.01419623453534864,
+          0.08570975341333022,
+          0.14179536107787333
+        ]
+      ]
+    },
+    "gapped": {
+      "method": "MAP point optimization; no posterior uncertainty",
+      "objective": 162.33880614552896,
+      "restart_objectives": [
+        162.33880614552905,
+        162.33880614552913,
+        162.33880614552896
+      ],
+      "max_abs_gradients": [
+        5.791580067887603e-07,
+        7.364334031478847e-07,
+        6.492323051457416e-07
+      ],
+      "iterations": [
+        20,
+        20,
+        20
+      ],
+      "restart_objective_range": 1.7053025658242404e-13,
+      "nominal_correlation_condition": 174662.4098327341,
+      "weights": [
+        [
+          -0.01005138055849838,
+          -0.026821302804339746,
+          -0.13301399374650077,
+          0.2749797805639911,
+          0.8196088590789439,
+          0.15564106258275814,
+          -0.036173728131727215
+        ],
+        [
+          0.004502583628817724,
+          -0.0062445267949396595,
+          -0.040270470551599616,
+          -0.07498274928596214,
+          -0.16284267248601725,
+          0.046469551967307024,
+          0.1881412029954176
+        ]
+      ]
+    },
+    "gapped_independent_bins": {
+      "method": "MAP point optimization; no posterior uncertainty",
+      "objective": 161.43922592599333,
+      "restart_objectives": [
+        161.43922592599333,
+        161.4392259259934,
+        161.43922592599367
+      ],
+      "max_abs_gradients": [
+        5.450637209358788e-07,
+        6.787835779564766e-07,
+        1.0601096489537554e-06
+      ],
+      "iterations": [
+        19,
+        20,
+        18
+      ],
+      "restart_objective_range": 3.410605131648481e-13,
+      "nominal_correlation_condition": 124710.67516557447,
+      "weights": [
+        [
+          -0.010134288021758966,
+          -0.02665957800876762,
+          -0.1321288686521547,
+          0.27663160834961453,
+          0.8205643571710992,
+          0.15749052528317578,
+          -0.03366489971721442
+        ],
+        [
+          0.0046103627195100885,
+          -0.006471872603119643,
+          -0.0416205522465732,
+          -0.07670913654785129,
+          -0.16538073442434761,
+          0.047142390333692906,
+          0.1671896734528165
+        ]
+      ]
+    }
+  },
+  "evaluation": "Fixed 17 epochs, log-frequency grid plus native bins within 0.6 mHz of 30/60/90 mHz; truth used only after fitting. No model selection on these scores."
+}
