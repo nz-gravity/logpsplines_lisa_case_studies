@@ -1,0 +1,1157 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>4. Short-duration XYZ with gaps &#8212; LogPSplinePSD · LISA case studies</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/case-studies.css?v=859fb48c" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/04_short_xyz_gaps';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="canonical" href="https://nz-gravity.github.io/logpsplines_lisa_case_studies/notebooks/04_short_xyz_gaps.html" />
+    <link rel="icon" href="../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Simulation and likelihood notes" href="../notebook_models.html" />
+    <link rel="prev" title="3. Estimate the XYZ spectral matrix" href="03_xyz_psd.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="LogPSplinePSD · LISA case studies - Home"/>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="LogPSplinePSD · LISA case studies - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    LISA PSD case studies
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Start here</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../running.html">Install and run</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Notebook walkthroughs</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_generate_data.html">1. Generate the data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_time_varying_psd.html">2. Time-varying PSD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_xyz_psd.html">3. Standard XYZ estimation</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">4. Short-duration XYZ with gaps</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Further reading</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../notebook_models.html">Simulation and likelihood notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gaplike_xyz.html">GapLike and correlated XYZ</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://nz-gravity.github.io/LogPSplinePSD/intro.html">LogPSplinePSD documentation ↗</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+        <div class="header-article-item"><a class="library-return" href="https://nz-gravity.github.io/LogPSplinePSD/intro.html"
+   aria-label="Back to LogPSplinePSD documentation">
+  <span aria-hidden="true">←</span> Back to LogPSplinePSD
+</a></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/notebooks/04_short_xyz_gaps.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>4. Short-duration XYZ with gaps</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#goal">Goal</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-keep-the-original-time-coordinates">Step 1 — Keep the original time coordinates</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-prepare-the-window-aware-matrix-reference">Step 2 — Prepare the window-aware matrix reference</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-freeze-one-adaptive-partition">Step 3 — Freeze one adaptive partition</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-fit-a-full-multivariate-correction">Step 4 — Fit a full multivariate correction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-5-check-optimisation-before-looking-at-truth">Step 5 — Check optimisation before looking at truth</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-6-recover-the-physical-xyz-spectral-matrix">Step 6 — Recover the physical XYZ spectral matrix</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-7-keep-an-exact-covariance-benchmark">Step 7 — Keep an exact covariance benchmark</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#checks-and-next-steps">Checks and next steps</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="short-duration-xyz-with-gaps">
+<h1>4. Short-duration XYZ with gaps<a class="headerlink" href="#short-duration-xyz-with-gaps" title="Link to this heading">#</a></h1>
+<section id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Link to this heading">#</a></h2>
+<p>Estimate the full XYZ spectrum from the <strong>same seven-day realization</strong> with
+continuous and gapped observations. A known orbit reference places moving
+nulls; a multivariate spline learns its smooth matrix correction.</p>
+<p>The short-segment idea is inspired by
+<a class="reference external" href="https://arxiv.org/html/2610.28726v1">Burke et al., Noisy Pipelines I</a>.
+This controlled matrix simulation is not their complete instrument pipeline.
+The fitted residual is frequency-only over the week; the reference carries
+time variation. We retain an exact joint-covariance point check after the
+fast fit, without fitting secondary noise components.</p>
+</section>
+<section id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Link to this heading">#</a></h2>
+<p>Run notebook 1 first. This lesson reuses its XYZ record and actual observation
+windows. The small adapters below prepare library data and initialize a guide;
+all multivariate spline inference is still performed by <code class="docutils literal notranslate"><span class="pre">log_psplines.fit</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">replace</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">log_psplines</span><span class="w"> </span><span class="kn">import</span> <span class="n">fit</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lisa_case_studies.notebook_tools</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">COLORS</span><span class="p">,</span>
+    <span class="n">matrix_errors</span><span class="p">,</span>
+    <span class="n">reference_config</span><span class="p">,</span>
+    <span class="n">style</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lisa_case_studies.orbit_reference</span><span class="w"> </span><span class="kn">import</span> <span class="n">DAY</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lisa_case_studies.reference_matrix</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">adaptive_partition</span><span class="p">,</span>
+    <span class="n">coefficient_data</span><span class="p">,</span>
+    <span class="n">elbo_diagnostics</span><span class="p">,</span>
+    <span class="n">matrix_mean</span><span class="p">,</span>
+    <span class="n">pool_log_frequency</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lisa_case_studies.tutorial_data</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">load_data</span><span class="p">,</span>
+    <span class="n">load_orbit_simulation</span><span class="p">,</span>
+    <span class="n">residual_matrix</span><span class="p">,</span>
+    <span class="n">workspace</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">style</span><span class="p">()</span>
+<span class="n">data</span><span class="p">,</span> <span class="n">simulation</span> <span class="o">=</span> <span class="n">load_orbit_simulation</span><span class="p">()</span>
+<span class="n">saved_windows</span> <span class="o">=</span> <span class="n">load_data</span><span class="p">(</span><span class="s2">"windows"</span><span class="p">)</span>
+<span class="n">windows</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">saved_windows</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"continuous"</span><span class="p">,</span> <span class="s2">"gapped"</span><span class="p">)}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="step-1-keep-the-original-time-coordinates">
+<h2>Step 1 — Keep the original time coordinates<a class="headerlink" href="#step-1-keep-the-original-time-coordinates" title="Link to this heading">#</a></h2>
+<p>The gap mask removes observations, not elapsed time. A common taper and
+separate gap gate determine the two observation operators.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">layout</span><span class="o">=</span><span class="s2">"constrained"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">window</span> <span class="ow">in</span> <span class="n">windows</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">"time"</span><span class="p">]</span> <span class="o">/</span> <span class="n">DAY</span><span class="p">,</span> <span class="n">window</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">COLORS</span><span class="p">[</span><span class="n">label</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
+    <span class="n">xlabel</span><span class="o">=</span><span class="s2">"Day"</span><span class="p">,</span>
+    <span class="n">ylabel</span><span class="o">=</span><span class="s2">"Observation window"</span><span class="p">,</span>
+    <span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">"Paired continuous and gapped records"</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/7d463ef50e4c4f9aea8e773506750321f1bb673b31f4d2dfb6e78ce1c9f05346.png" src="../_images/7d463ef50e4c4f9aea8e773506750321f1bb673b31f4d2dfb6e78ce1c9f05346.png" />
+</div>
+</div>
+</section>
+<section id="step-2-prepare-the-window-aware-matrix-reference">
+<h2>Step 2 — Prepare the window-aware matrix reference<a class="headerlink" href="#step-2-prepare-the-window-aware-matrix-reference" title="Link to this heading">#</a></h2>
+<p>For each window, propagate the nominal orbit factors into the <strong>full
+same-frequency XYZ covariance</strong> <span class="math notranslate nohighlight">\(C_{w,0}(f)\)</span>. Whiten native coefficients by
+its Cholesky factor before aggregating frequencies.</p>
+<p>This preserves channel cross terms. It is still a Whittle approximation to
+assume those whitened frequencies are independent. GapLike supplies the
+masks/windows; its independent-channel likelihood is not substituted for XYZ.
+<a class="reference internal" href="../gaplike_xyz.html"><span class="std std-doc">More on GapLike and XYZ</span></a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reference</span> <span class="o">=</span> <span class="n">simulation</span><span class="o">.</span><span class="n">window_references</span><span class="p">(</span><span class="n">windows</span><span class="p">)</span>
+<span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span>
+    <span class="p">(</span><span class="n">simulation</span><span class="o">.</span><span class="n">frequency</span> <span class="o">&gt;=</span> <span class="mf">0.4e-3</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">simulation</span><span class="o">.</span><span class="n">frequency</span> <span class="o">&lt;=</span> <span class="mf">99e-3</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">frequency</span> <span class="o">=</span> <span class="n">simulation</span><span class="o">.</span><span class="n">frequency</span><span class="p">[</span><span class="n">bins</span><span class="p">]</span>
+<span class="n">inputs</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">window</span> <span class="ow">in</span> <span class="n">windows</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">coefficients</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">rfft</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">"xyz"</span><span class="p">]</span> <span class="o">*</span> <span class="n">window</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="n">bins</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+        <span class="mi">2</span> <span class="o">*</span> <span class="n">simulation</span><span class="o">.</span><span class="n">dt</span> <span class="o">/</span> <span class="n">simulation</span><span class="o">.</span><span class="n">n</span>
+    <span class="p">)</span>
+    <span class="n">white</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">cholesky</span><span class="p">(</span><span class="n">reference</span><span class="p">[</span><span class="n">label</span><span class="p">][</span><span class="n">bins</span><span class="p">]),</span> <span class="n">coefficients</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+    <span class="p">)[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="n">enbw</span> <span class="o">=</span> <span class="n">simulation</span><span class="o">.</span><span class="n">n</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">window</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">window</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+    <span class="n">inputs</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="n">coefficient_data</span><span class="p">(</span><span class="n">white</span><span class="p">,</span> <span class="n">frequency</span><span class="p">,</span> <span class="n">enbw</span><span class="o">=</span><span class="n">enbw</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="step-3-freeze-one-adaptive-partition">
+<h2>Step 3 — Freeze one adaptive partition<a class="headerlink" href="#step-3-freeze-one-adaptive-partition" title="Link to this heading">#</a></h2>
+<p>Use only observed gapped training data to select edges, then apply the same
+partition to both observations. The pilot selects edges; actual complex
+cross-products and their counts are summed without smoothing. Null
+neighbourhoods retain native resolution. Bins never change during fitting.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">partition</span> <span class="o">=</span> <span class="n">adaptive_partition</span><span class="p">(</span><span class="n">inputs</span><span class="p">[</span><span class="s2">"gapped"</span><span class="p">])</span>
+<span class="n">pooled</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">label</span><span class="p">:</span> <span class="n">pool_log_frequency</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">partition</span><span class="p">)</span> <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="n">inputs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+<span class="p">}</span>
+<span class="k">assert</span> <span class="n">partition</span><span class="o">.</span><span class="n">freq_bin_counts</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">frequency</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">layout</span><span class="o">=</span><span class="s2">"constrained"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">step</span><span class="p">(</span>
+    <span class="n">partition</span><span class="o">.</span><span class="n">f_coarse</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">partition</span><span class="o">.</span><span class="n">freq_bin_counts</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="s2">"mid"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"X"</span><span class="p">]</span>
+<span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
+    <span class="n">xlabel</span><span class="o">=</span><span class="s2">"Frequency (mHz)"</span><span class="p">,</span>
+    <span class="n">ylabel</span><span class="o">=</span><span class="s2">"Native bins per aggregate"</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">"Adaptive partition: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">frequency</span><span class="p">)</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> native frequencies → </span><span class="si">{</span><span class="n">partition</span><span class="o">.</span><span class="n">Nc</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> aggregates"</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/d246c0e4f11110c82bd1d148388647d88c3eb94ef5db7c297f809dc640a1702a.png" src="../_images/d246c0e4f11110c82bd1d148388647d88c3eb94ef5db7c297f809dc640a1702a.png" />
+</div>
+</div>
+</section>
+<section id="step-4-fit-a-full-multivariate-correction">
+<h2>Step 4 — Fit a full multivariate correction<a class="headerlink" href="#step-4-fit-a-full-multivariate-correction" title="Link to this heading">#</a></h2>
+<p>The physical model is <span class="math notranslate nohighlight">\(S(t,f)=L_0(t,f)R(f)L_0(t,f)^\dagger\)</span> with a full
+positive-definite spline matrix <span class="math notranslate nohighlight">\(R\)</span>. The library analytically integrates the
+six Gaussian theta fields and restores their conditional draws afterward.
+This integration is exact <strong>for the chosen Whittle model</strong>, not for the
+joint gapped likelihood.</p>
+<p>Use the same prior and basis for both observations, and three independently
+seeded VI restarts. The guide starts near the known reference to avoid
+rank-one empirical initialisation. Only training ELBO selects a restart.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">base_config</span><span class="p">,</span> <span class="n">components</span> <span class="o">=</span> <span class="n">reference_config</span><span class="p">(</span><span class="n">pooled</span><span class="p">[</span><span class="s2">"gapped"</span><span class="p">],</span> <span class="n">steps</span><span class="o">=</span><span class="mi">4000</span><span class="p">,</span> <span class="n">draws</span><span class="o">=</span><span class="mi">96</span><span class="p">)</span>
+<span class="n">candidates</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">windows</span><span class="p">:</span>
+    <span class="n">candidates</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">restart</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">replace</span><span class="p">(</span><span class="n">base_config</span><span class="p">,</span> <span class="n">rng_key</span><span class="o">=</span><span class="mi">207</span> <span class="o">+</span> <span class="n">restart</span><span class="p">)</span>
+        <span class="n">candidates</span><span class="p">[</span><span class="n">label</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fit</span><span class="p">(</span><span class="n">pooled</span><span class="p">[</span><span class="n">label</span><span class="p">],</span> <span class="n">config</span><span class="p">))</span>
+<span class="n">selected</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">label</span><span class="p">:</span> <span class="nb">min</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">r</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">losses</span><span class="p">)[</span><span class="o">-</span><span class="mi">8</span><span class="p">:]</span><span class="o">.</span><span class="n">mean</span><span class="p">()))</span>
+    <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">items</span> <span class="ow">in</span> <span class="n">candidates</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>W1106 12:13:04.963393 2373144 cpp_gen_intrinsics.cc:74] Empty bitcode string provided for eigen. Optimizations relying on this IR will be disabled.
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="step-5-check-optimisation-before-looking-at-truth">
+<h2>Step 5 — Check optimisation before looking at truth<a class="headerlink" href="#step-5-check-optimisation-before-looking-at-truth" title="Link to this heading">#</a></h2>
+<p>Loss plateaus and restart agreement are numerical checks. They do not imply
+NUTS-equivalent uncertainty, especially with correlated Fourier features.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">checks</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">layout</span><span class="o">=</span><span class="s2">"constrained"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">items</span> <span class="ow">in</span> <span class="n">candidates</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">offset</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">losses</span><span class="p">)[</span><span class="o">-</span><span class="mi">8</span><span class="p">:]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">items</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">restart</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">items</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s2">"theta_parameterization"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"marginalized"</span>
+        <span class="n">rows</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">elbo_diagnostics</span><span class="p">(</span><span class="n">loss</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">frequency</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">loss</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">losses_per_block</span>
+        <span class="p">]</span>
+        <span class="n">checks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">"Observation"</span><span class="p">:</span> <span class="n">label</span><span class="p">,</span>
+                <span class="s2">"Restart"</span><span class="p">:</span> <span class="n">restart</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s2">"Largest tail change / native bin"</span><span class="p">:</span> <span class="nb">max</span><span class="p">(</span>
+                    <span class="n">row</span><span class="p">[</span><span class="s2">"tail_mean_change_per_native_bin"</span><span class="p">]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span>
+                <span class="p">),</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">vi</span><span class="o">.</span><span class="n">losses</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">base_config</span><span class="o">.</span><span class="n">vi_steps</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">loss</span><span class="p">)),</span>
+            <span class="p">(</span><span class="n">loss</span> <span class="o">-</span> <span class="n">offset</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">frequency</span><span class="p">),</span>
+            <span class="n">color</span><span class="o">=</span><span class="n">COLORS</span><span class="p">[</span><span class="n">label</span><span class="p">],</span>
+            <span class="n">ls</span><span class="o">=</span><span class="p">(</span><span class="s2">"-"</span><span class="p">,</span> <span class="s2">"--"</span><span class="p">,</span> <span class="s2">":"</span><span class="p">)[</span><span class="n">restart</span><span class="p">],</span>
+            <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">restart</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+        <span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
+    <span class="n">xlabel</span><span class="o">=</span><span class="s2">"VI updates per row"</span><span class="p">,</span>
+    <span class="n">ylabel</span><span class="o">=</span><span class="s2">"Negative ELBO / native bin (offset)"</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">"Three restarts per observation"</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">checks</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/4dba782a6abad47a71a847628a71478dca4c75886c4e2f6db541ed010676b9cd.png" src="../_images/4dba782a6abad47a71a847628a71478dca4c75886c4e2f6db541ed010676b9cd.png" />
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Observation</th>
+      <th>Restart</th>
+      <th>Largest tail change / native bin</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>continuous</td>
+      <td>1</td>
+      <td>0.000023</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>continuous</td>
+      <td>2</td>
+      <td>0.000023</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>continuous</td>
+      <td>3</td>
+      <td>0.000049</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>gapped</td>
+      <td>1</td>
+      <td>0.000015</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>gapped</td>
+      <td>2</td>
+      <td>0.000019</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>gapped</td>
+      <td>3</td>
+      <td>0.000054</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="step-6-recover-the-physical-xyz-spectral-matrix">
+<h2>Step 6 — Recover the physical XYZ spectral matrix<a class="headerlink" href="#step-6-recover-the-physical-xyz-spectral-matrix" title="Link to this heading">#</a></h2>
+<p>Undo the reference transformation on a fixed native-frequency evaluation
+support. Reconstruction uses restored theta draws, and averages complete
+positive-definite matrices. Truth is used only from this point onward.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">probe</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">rint</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">geomspace</span><span class="p">(</span><span class="mf">0.4e-3</span><span class="p">,</span> <span class="mf">99e-3</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span> <span class="o">*</span> <span class="n">simulation</span><span class="o">.</span><span class="n">n</span> <span class="o">*</span> <span class="n">simulation</span><span class="o">.</span><span class="n">dt</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span>
+            <span class="nb">int</span>
+        <span class="p">),</span>
+        <span class="o">*</span><span class="p">[</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">simulation</span><span class="o">.</span><span class="n">frequency</span> <span class="o">-</span> <span class="n">f0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.6e-3</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">f0</span> <span class="ow">in</span> <span class="p">(</span><span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.09</span><span class="p">)</span>
+        <span class="p">],</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+<span class="n">evaluation_frequency</span> <span class="o">=</span> <span class="n">simulation</span><span class="o">.</span><span class="n">frequency</span><span class="p">[</span><span class="n">probe</span><span class="p">]</span>
+<span class="n">evaluation_time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s2">"time"</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="mi">17</span><span class="p">)</span>
+<span class="n">coordinate</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">evaluation_frequency</span> <span class="o">/</span> <span class="n">frequency</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">frequency</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">frequency</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+    <span class="mi">0</span><span class="p">,</span>
+    <span class="mi">1</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">factor</span> <span class="o">=</span> <span class="n">simulation</span><span class="o">.</span><span class="n">reference_factor</span><span class="p">(</span><span class="n">evaluation_time</span><span class="p">,</span> <span class="n">evaluation_frequency</span><span class="p">)</span>
+<span class="n">truth</span> <span class="o">=</span> <span class="n">simulation</span><span class="o">.</span><span class="n">spectrum</span><span class="p">(</span><span class="n">evaluation_time</span><span class="p">,</span> <span class="n">evaluation_frequency</span><span class="p">)</span>
+<span class="n">estimates</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">selected</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">correction</span> <span class="o">=</span> <span class="n">matrix_mean</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">posterior</span><span class="p">,</span> <span class="n">components</span><span class="p">,</span> <span class="n">coordinate</span><span class="p">)</span>
+    <span class="n">estimates</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="n">factor</span> <span class="o">@</span> <span class="n">correction</span><span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">@</span> <span class="n">factor</span><span class="o">.</span><span class="n">conj</span><span class="p">()</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mf">3.3</span><span class="p">),</span> <span class="n">layout</span><span class="o">=</span><span class="s2">"constrained"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">channel</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="s2">"XYZ"</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span>
+        <span class="n">evaluation_frequency</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span>
+        <span class="n">truth</span><span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="p">:,</span> <span class="n">j</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">real</span><span class="p">,</span>
+        <span class="s2">"k--"</span><span class="p">,</span>
+        <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="s2">"Injected"</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">estimate</span> <span class="ow">in</span> <span class="n">estimates</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span>
+            <span class="n">evaluation_frequency</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span>
+            <span class="n">estimate</span><span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="p">:,</span> <span class="n">j</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">real</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="n">COLORS</span><span class="p">[</span><span class="n">label</span><span class="p">],</span>
+            <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">xlabel</span><span class="o">=</span><span class="s2">"Frequency (mHz)"</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">"PSD (1/Hz)"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">channel</span><span class="si">}</span><span class="s2">: midweek"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/4bf1301a3e428a16c45d7324e60d2794a5d2107c7971e6e9e989f28cd3d0d55d.png" src="../_images/4bf1301a3e428a16c45d7324e60d2794a5d2107c7971e6e9e989f28cd3d0d55d.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mf">3.4</span><span class="p">),</span> <span class="n">layout</span><span class="o">=</span><span class="s2">"constrained"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">f0</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.09</span><span class="p">),</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">keep</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">evaluation_frequency</span> <span class="o">-</span> <span class="n">f0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.15e-3</span>
+    <span class="k">for</span> <span class="n">t</span><span class="p">,</span> <span class="n">ls</span> <span class="ow">in</span> <span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="s2">"--"</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">"-"</span><span class="p">)):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span>
+            <span class="n">evaluation_frequency</span><span class="p">[</span><span class="n">keep</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span>
+            <span class="n">truth</span><span class="p">[</span><span class="n">t</span><span class="p">,</span> <span class="n">keep</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">real</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="s2">"k"</span><span class="p">,</span>
+            <span class="n">ls</span><span class="o">=</span><span class="n">ls</span><span class="p">,</span>
+            <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span>
+            <span class="n">evaluation_frequency</span><span class="p">[</span><span class="n">keep</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span>
+            <span class="n">estimates</span><span class="p">[</span><span class="s2">"gapped"</span><span class="p">][</span><span class="n">t</span><span class="p">,</span> <span class="n">keep</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">real</span><span class="p">,</span>
+            <span class="n">color</span><span class="o">=</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"gapped"</span><span class="p">],</span>
+            <span class="n">ls</span><span class="o">=</span><span class="n">ls</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
+        <span class="n">xlabel</span><span class="o">=</span><span class="s2">"Frequency (mHz)"</span><span class="p">,</span>
+        <span class="n">ylabel</span><span class="o">=</span><span class="s2">"X PSD (1/Hz)"</span><span class="p">,</span>
+        <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">f0</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">1000</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> mHz null"</span><span class="p">,</span>
+    <span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/437bc03f89b45a691e04e99527e709a59a8c1afb39afad38a3a18e595eef7d6f.png" src="../_images/437bc03f89b45a691e04e99527e709a59a8c1afb39afad38a3a18e595eef7d6f.png" />
+</div>
+</div>
+<p>Black is injected; orange is the gapped reconstruction. Dashed curves show
+day 0 and solid curves day 7. Geometry supplies the dip motion; smooth
+splines do not have to discover the nulls unaided.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">error_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="p">{</span><span class="n">label</span><span class="p">:</span> <span class="n">matrix_errors</span><span class="p">(</span><span class="n">estimate</span><span class="p">,</span> <span class="n">truth</span><span class="p">)</span> <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">estimate</span> <span class="ow">in</span> <span class="n">estimates</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+<span class="p">)</span><span class="o">.</span><span class="n">T</span>
+<span class="n">error_table</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Auto log10 RMSE</th>
+      <th>Complex cross RMSE</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>continuous</th>
+      <td>0.0053</td>
+      <td>0.0115</td>
+    </tr>
+    <tr>
+      <th>gapped</th>
+      <td>0.0054</td>
+      <td>0.0116</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="step-7-keep-an-exact-covariance-benchmark">
+<h2>Step 7 — Keep an exact covariance benchmark<a class="headerlink" href="#step-7-keep-an-exact-covariance-benchmark" title="Link to this heading">#</a></h2>
+<p>Take a small <strong>fixed</strong> set of adjacent native bins around each null. For
+these retained XYZ features, the simulator can calculate the full joint
+real Gaussian covariance, including frequency coupling and pseudo-covariance.
+This is exact for this declared matrix simulator, not for the full time record.
+It evaluates point reconstructions; it does not fit or marginalise theta
+under the joint likelihood.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">selected_bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span>
+    <span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">rint</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.09</span><span class="p">])</span> <span class="o">*</span> <span class="n">simulation</span><span class="o">.</span><span class="n">n</span> <span class="o">*</span> <span class="n">simulation</span><span class="o">.</span><span class="n">dt</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span>
+            <span class="nb">int</span>
+        <span class="p">)[:,</span> <span class="kc">None</span><span class="p">]</span>
+        <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])[</span><span class="kc">None</span><span class="p">]</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+<span class="p">)</span>
+<span class="n">window</span> <span class="o">=</span> <span class="n">windows</span><span class="p">[</span><span class="s2">"gapped"</span><span class="p">]</span>
+<span class="n">nominal_covariance</span> <span class="o">=</span> <span class="n">simulation</span><span class="o">.</span><span class="n">feature_covariance</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="n">selected_bins</span><span class="p">)</span>
+<span class="n">std</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">nominal_covariance</span><span class="p">))</span>
+<span class="n">correlation</span> <span class="o">=</span> <span class="n">nominal_covariance</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">std</span><span class="p">,</span> <span class="n">std</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">5.5</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">),</span> <span class="n">layout</span><span class="o">=</span><span class="s2">"constrained"</span><span class="p">)</span>
+<span class="n">image</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">correlation</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">"RdBu_r"</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s2">"lower"</span><span class="p">)</span>
+<span class="n">half</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">correlation</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">half</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"0.4"</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">half</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"0.4"</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set</span><span class="p">(</span>
+    <span class="n">xticks</span><span class="o">=</span><span class="p">[</span><span class="n">half</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">half</span><span class="p">],</span>
+    <span class="n">yticks</span><span class="o">=</span><span class="p">[</span><span class="n">half</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">half</span><span class="p">],</span>
+    <span class="n">xticklabels</span><span class="o">=</span><span class="p">[</span><span class="s2">"Real"</span><span class="p">,</span> <span class="s2">"Imaginary"</span><span class="p">],</span>
+    <span class="n">yticklabels</span><span class="o">=</span><span class="p">[</span><span class="s2">"Real"</span><span class="p">,</span> <span class="s2">"Imaginary"</span><span class="p">],</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">"Joint XYZ Fourier-feature correlation"</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Correlation"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/487d48db62aeae94ecf683637df07d6cefc6be90a4dd716b1e8b78bdc04f0c9a.png" src="../_images/487d48db62aeae94ecf683637df07d6cefc6be90a4dd716b1e8b78bdc04f0c9a.png" />
+</div>
+</div>
+<p>Off-diagonal frequency blocks are the information discarded by the fast
+Whittle fit. The matrix also retains within-frequency XYZ correlations.
+Use four independent realizations for the following point check. The
+injected-matrix row is an oracle control, never a model-selection input.
+Outside the fitted frequency band, the recovered residual is extended
+constantly at its nearest boundary; this assumption is explicit in the score.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">full_coordinate</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">simulation</span><span class="o">.</span><span class="n">frequency</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">/</span> <span class="n">frequency</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">frequency</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">frequency</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+    <span class="mi">0</span><span class="p">,</span>
+    <span class="mi">1</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">fitted_residual</span> <span class="o">=</span> <span class="n">matrix_mean</span><span class="p">(</span><span class="n">selected</span><span class="p">[</span><span class="s2">"gapped"</span><span class="p">]</span><span class="o">.</span><span class="n">posterior</span><span class="p">,</span> <span class="n">components</span><span class="p">,</span> <span class="n">full_coordinate</span><span class="p">)</span>
+<span class="n">covariances</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"Reference only"</span><span class="p">:</span> <span class="n">nominal_covariance</span><span class="p">,</span>
+    <span class="s2">"Gapped spline point"</span><span class="p">:</span> <span class="n">simulation</span><span class="o">.</span><span class="n">feature_covariance</span><span class="p">(</span>
+        <span class="n">window</span><span class="p">,</span> <span class="n">selected_bins</span><span class="p">,</span> <span class="n">correction</span><span class="o">=</span><span class="n">fitted_residual</span>
+    <span class="p">),</span>
+    <span class="s2">"Injected matrix (oracle)"</span><span class="p">:</span> <span class="n">simulation</span><span class="o">.</span><span class="n">feature_covariance</span><span class="p">(</span>
+        <span class="n">window</span><span class="p">,</span> <span class="n">selected_bins</span><span class="p">,</span> <span class="n">correction</span><span class="o">=</span><span class="n">residual_matrix</span><span class="p">(</span><span class="n">simulation</span><span class="o">.</span><span class="n">frequency</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+    <span class="p">),</span>
+<span class="p">}</span>
+<span class="n">whitening</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">cholesky</span><span class="p">(</span><span class="n">nominal_covariance</span><span class="p">))</span>
+<span class="n">validation</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="n">simulation</span><span class="o">.</span><span class="n">features</span><span class="p">(</span><span class="n">simulation</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">seed</span><span class="p">),</span> <span class="n">window</span><span class="p">,</span> <span class="n">selected_bins</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">seed</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1007</span><span class="p">,</span> <span class="mi">1011</span><span class="p">)</span>
+        <span class="p">]</span>
+    <span class="p">)</span>
+    <span class="o">@</span> <span class="n">whitening</span><span class="o">.</span><span class="n">T</span>
+<span class="p">)</span>
+<span class="n">joint_scores</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">covariance</span> <span class="ow">in</span> <span class="n">covariances</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">covariance</span> <span class="o">=</span> <span class="n">whitening</span> <span class="o">@</span> <span class="n">covariance</span> <span class="o">@</span> <span class="n">whitening</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">"ri,ir-&gt;r"</span><span class="p">,</span> <span class="n">validation</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">covariance</span><span class="p">,</span> <span class="n">validation</span><span class="o">.</span><span class="n">T</span><span class="p">))</span>
+    <span class="n">joint_scores</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">"Point model"</span><span class="p">:</span> <span class="n">label</span><span class="p">,</span>
+            <span class="s2">"Mean exact joint q / dimension"</span><span class="p">:</span> <span class="n">q</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">/</span> <span class="n">covariance</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">joint_scores</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Point model</th>
+      <th>Mean exact joint q / dimension</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Reference only</td>
+      <td>0.962</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Gapped spline point</td>
+      <td>0.964</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Injected matrix (oracle)</td>
+      <td>0.966</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="checks-and-next-steps">
+<h2>Checks and next steps<a class="headerlink" href="#checks-and-next-steps" title="Link to this heading">#</a></h2>
+<p>A joint quadratic near one is an independent point-model check, not proof
+of posterior coverage. The main inference remains an approximate Whittle
+fit. The reference, partition, priors and restarts were fixed before the
+independent validation records were generated.</p>
+<p>For the full derivation, see the <a class="reference internal" href="../notebook_models.html"><span class="std std-doc">simulation notes</span></a>
+and <a class="reference internal" href="../gaplike_xyz.html"><span class="std std-doc">GapLike/XYZ explanation</span></a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">truth</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">estimate</span> <span class="ow">in</span> <span class="n">estimates</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">estimate</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="p">(</span>
+        <span class="nb">len</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">name</span>
+                <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">selected</span><span class="p">[</span><span class="n">label</span><span class="p">]</span><span class="o">.</span><span class="n">posterior</span>
+                <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"weights_theta_"</span><span class="p">)</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+        <span class="o">==</span> <span class="mi">6</span>
+    <span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">savez_compressed</span><span class="p">(</span>
+    <span class="n">workspace</span><span class="p">()</span> <span class="o">/</span> <span class="s2">"short_xyz_recovery.npz"</span><span class="p">,</span>
+    <span class="n">frequency</span><span class="o">=</span><span class="n">evaluation_frequency</span><span class="p">,</span>
+    <span class="n">time</span><span class="o">=</span><span class="n">evaluation_time</span><span class="p">,</span>
+    <span class="n">truth</span><span class="o">=</span><span class="n">truth</span><span class="p">,</span>
+    <span class="n">continuous</span><span class="o">=</span><span class="n">estimates</span><span class="p">[</span><span class="s2">"continuous"</span><span class="p">],</span>
+    <span class="n">gapped</span><span class="o">=</span><span class="n">estimates</span><span class="p">[</span><span class="s2">"gapped"</span><span class="p">],</span>
+    <span class="n">bin_starts</span><span class="o">=</span><span class="n">partition</span><span class="o">.</span><span class="n">J_start</span><span class="p">,</span>
+    <span class="n">bin_stops</span><span class="o">=</span><span class="n">partition</span><span class="o">.</span><span class="n">J_stop</span><span class="p">,</span>
+    <span class="n">bin_counts</span><span class="o">=</span><span class="n">partition</span><span class="o">.</span><span class="n">freq_bin_counts</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">error_table</span><span class="o">.</span><span class="n">to_json</span><span class="p">(</span><span class="n">workspace</span><span class="p">()</span> <span class="o">/</span> <span class="s2">"short_xyz_errors.json"</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s2">"index"</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="03_xyz_psd.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">3. Estimate the XYZ spectral matrix</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../notebook_models.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Simulation and likelihood notes</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#goal">Goal</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-keep-the-original-time-coordinates">Step 1 — Keep the original time coordinates</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-prepare-the-window-aware-matrix-reference">Step 2 — Prepare the window-aware matrix reference</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-freeze-one-adaptive-partition">Step 3 — Freeze one adaptive partition</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-fit-a-full-multivariate-correction">Step 4 — Fit a full multivariate correction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-5-check-optimisation-before-looking-at-truth">Step 5 — Check optimisation before looking at truth</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-6-recover-the-physical-xyz-spectral-matrix">Step 6 — Recover the physical XYZ spectral matrix</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#step-7-keep-an-exact-covariance-benchmark">Step 7 — Keep an exact covariance benchmark</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#checks-and-next-steps">Checks and next steps</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By NZ Gravity
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

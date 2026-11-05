@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Can GapLike fit XYZ? &#8212; LogPSplinePSD · LISA case studies</title>
+    <title>GapLike and correlated XYZ &#8212; LogPSplinePSD · LISA case studies</title>
   
   
   
@@ -69,8 +69,7 @@
     <link rel="icon" href="_static/favicon.png"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Model conventions" href="models.html" />
-    <link rel="prev" title="Exact compressed gap benchmark" href="likelihood.html" />
+    <link rel="prev" title="Simulation and likelihood notes" href="notebook_models.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -220,26 +219,25 @@
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="intro.html">
-                    LISA case studies
+                    LISA PSD case studies
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Start here</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="running.html">Install and run</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">LISA case studies</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Notebook walkthroughs</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="time_varying.html">Nonstationary A noise</a></li>
-<li class="toctree-l1"><a class="reference internal" href="xyz.html">Correlated XYZ noise</a></li>
-<li class="toctree-l1"><a class="reference internal" href="gapped_xyz.html">Seven-day evolving XYZ with gaps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/01_generate_data.html">1. Generate the data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/02_time_varying_psd.html">2. Time-varying PSD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/03_xyz_psd.html">3. Standard XYZ estimation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/04_short_xyz_gaps.html">4. Short-duration XYZ with gaps</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Further reading</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="reference_matrix.html">Reference, adaptive bins and theta</a></li>
-<li class="toctree-l1"><a class="reference internal" href="likelihood.html">Exact compressed gap benchmark</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Can GapLike fit XYZ?</a></li>
-<li class="toctree-l1"><a class="reference internal" href="models.html">Models and conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebook_models.html">Simulation and likelihood notes</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">GapLike and correlated XYZ</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://nz-gravity.github.io/LogPSplinePSD/intro.html">LogPSplinePSD documentation ↗</a></li>
 </ul>
 
@@ -381,7 +379,7 @@
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Can GapLike fit XYZ?</h1>
+    <h1>GapLike and correlated XYZ</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -391,9 +389,8 @@
             </div>
             <nav aria-label="Page">
                 <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-we-use">What we use</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-stacking-three-channels-means">What stacking three channels means</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-two-fitting-paths-here">The two fitting paths here</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-not-stack-xyz-into-a-scalar-solver">Why not stack XYZ into a scalar solver?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-the-walkthrough-does">What the walkthrough does</a></li>
 </ul>
             </nav>
         </div>
@@ -405,76 +402,61 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="can-gaplike-fit-xyz">
-<h1>Can GapLike fit XYZ?<a class="headerlink" href="#can-gaplike-fit-xyz" title="Link to this heading">#</a></h1>
-<p><strong>Yes, GapLike can be part of an XYZ analysis.</strong> The distinction is between
-using its gap tools and assuming its current multichannel likelihood already
-models correlated XYZ.</p>
-<section id="what-we-use">
-<h2>What we use<a class="headerlink" href="#what-we-use" title="Link to this heading">#</a></h2>
-<p>The pinned <a class="reference external" href="https://github.com/gaplike/gaplike">GapLike</a> implementation provides
-our gap masks, edge gates and segment windows. These operators apply to
-all three time streams. Its exact stationary scalar likelihood also supplies
-an independent test control.</p>
-<p>We extend the covariance calculation to the full complex XYZ matrix and,
-for the compressed benchmark, to the joint real/imaginary Fourier vector.
-GapLike defines the observation; the case-study adapter supplies the extra
-channel and orbit structure.</p>
-</section>
-<section id="what-stacking-three-channels-means">
-<h2>What stacking three channels means<a class="headerlink" href="#what-stacking-three-channels-means" title="Link to this heading">#</a></h2>
-<p>In the pinned package’s multichannel CG interface, channels are independent
-with identical covariance. See its
-<a class="reference external" href="https://github.com/gaplike/gaplike/blob/99c61931f3f47997d589f255191052ccdbb79f97/src/gaplike/cg.py#L165-L166">documented assumption</a>.
-Stacking XYZ into that interface would therefore omit their cross spectra.
-XYZ are correlated even before gaps. Unequal, evolving arms generally also
-leave residual correlations after a simple XYZ-to-AET rotation.</p>
-<p>A correlated XYZ likelihood needs a block covariance such as</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="gaplike-and-correlated-xyz">
+<h1>GapLike and correlated XYZ<a class="headerlink" href="#gaplike-and-correlated-xyz" title="Link to this heading">#</a></h1>
+<p><strong>GapLike can be part of an XYZ analysis.</strong> The distinction is between its
+gap tools and the covariance assumed by its current multichannel likelihood.</p>
+<p>The <a class="reference internal" href="notebooks/04_short_xyz_gaps.html"><span class="std std-doc">fourth notebook</span></a> uses GapLike’s masks,
+edge gates and segment windows on all three time streams. A spectral-matrix
+adapter supplies the channel and orbit structure. Its exact point benchmark
+also retains the frequency correlations created by the observation window.</p>
+<section id="why-not-stack-xyz-into-a-scalar-solver">
+<h2>Why not stack XYZ into a scalar solver?<a class="headerlink" href="#why-not-stack-xyz-into-a-scalar-solver" title="Link to this heading">#</a></h2>
+<p>The pinned package’s multichannel CG interface assumes independent channels
+with identical covariance; see its
+<a class="reference external" href="https://github.com/gaplike/gaplike/blob/99c61931f3f47997d589f255191052ccdbb79f97/src/gaplike/cg.py#L164-L167">documented assumption</a>.
+XYZ have cross spectra, so that independence assumption generally fails.
+Unequal, evolving arms also leave correlations after a simple AET rotation.</p>
+<p>A correlated model requires channel blocks and the actual observation operator:</p>
 <div class="math notranslate nohighlight">
-\[C_{\rm obs}=G\,C_{XYZ}\,G^\dagger,\]</div>
-<p>where <span class="math notranslate nohighlight">\(G\)</span> contains the actual observation masks/transforms and <span class="math notranslate nohighlight">\(C_{XYZ}\)</span>
-contains all channel cross blocks. A time gap also mixes Fourier frequencies.
-Frequency-dependent whitening and a time-domain mask do not generally commute,
-so whitening three spectra and then invoking an independent-channel exact
-solver does not automatically solve the original problem.</p>
-<p>This is a missing model/operator extension, not a fundamental obstacle to
-GapLike or XYZ. A block covariance operator could also use matrix-free CG
-and a matching determinant method. That general full-time-series extension
-is not implemented in this demonstration.</p>
+\[C_{\rm obs}=G\,C_{XYZ}\,G^\dagger.\]</div>
+<p>A time gap couples Fourier frequencies. Frequency-dependent whitening and
+a time-domain mask do not generally commute, so whitening spectra and then
+calling an independent-channel exact solver does not automatically produce
+the original XYZ likelihood.</p>
 </section>
-<section id="the-two-fitting-paths-here">
-<h2>The two fitting paths here<a class="headerlink" href="#the-two-fitting-paths-here" title="Link to this heading">#</a></h2>
+<section id="what-the-walkthrough-does">
+<h2>What the walkthrough does<a class="headerlink" href="#what-the-walkthrough-does" title="Link to this heading">#</a></h2>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
-<tr class="row-odd"><th class="head"><p>Path</p></th>
-<th class="head"><p>Channel dependence</p></th>
-<th class="head"><p>Frequency dependence</p></th>
-<th class="head"><p>Role</p></th>
+<tr class="row-odd"><th class="head"><p>Calculation</p></th>
+<th class="head"><p>Channel correlations</p></th>
+<th class="head"><p>Frequency correlations</p></th>
+<th class="head"><p>Purpose</p></th>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Reference + full matrix spline</p></td>
-<td><p>Full 3×3 complex residual covariance</p></td>
-<td><p>Independent-frequency Whittle approximation; nominal window reference included</p></td>
-<td><p>Fast library demonstration with adaptive bins and marginalised theta</p></td>
+<tr class="row-even"><td><p>Full matrix spline fit</p></td>
+<td><p>Included in the residual spectral matrix</p></td>
+<td><p>Whittle approximation, with a window-aware nominal reference</p></td>
+<td><p>Fast recovery with adaptive bins and marginalised theta</p></td>
 </tr>
-<tr class="row-odd"><td><p>Exact compressed Gaussian</p></td>
-<td><p>Full XYZ and real/imaginary dependence</p></td>
-<td><p>Full coupling among retained features, including gaps and orbit epochs</p></td>
-<td><p>Benchmark for the declared simulator and fixed feature set</p></td>
+<tr class="row-odd"><td><p>Exact selected-feature covariance</p></td>
+<td><p>Included</p></td>
+<td><p>Included, with real/imaginary and epoch cross terms</p></td>
+<td><p>Independent point-model benchmark</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>The first path analytically marginalises theta under its regression-based
-Whittle model. Simply replacing its likelihood with the exact joint gapped
-covariance does not preserve that Gaussian integration. The second path
-fits a narrower two-component correction directly and supplies a control
-for the correlations omitted by the fast path.</p>
-<p>Both paths operate on the same seven-day simulation and actual GapLike masks.
-Neither treats zero-filled gap samples as extra independent data. The exact
-benchmark is exact for its retained Fourier features, not for the entire
-three-channel time record.</p>
+<p>The exact covariance in the notebook uses the same full-matrix simulator and
+observation windows as the injected data. It does not fit noise-component
+levels. The main fitter’s analytic theta marginalisation applies to its
+Whittle target; substituting the exact gapped target needs a new derivation.</p>
+<p>A full-time-series XYZ solver could use a block covariance operator with
+matrix-free CG and a matching determinant method. That general extension
+is not implemented here. The current notebook provides an exact, small
+covariance control and a clearly labelled fast approximation.</p>
 </section>
 </section>
 
@@ -509,22 +491,13 @@ three-channel time record.</p>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="likelihood.html"
+       href="notebook_models.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Exact compressed gap benchmark</p>
+        <p class="prev-next-title">Simulation and likelihood notes</p>
       </div>
-    </a>
-    <a class="right-next"
-       href="models.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Model conventions</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
@@ -544,9 +517,8 @@ three-channel time record.</p>
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-we-use">What we use</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-stacking-three-channels-means">What stacking three channels means</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-two-fitting-paths-here">The two fitting paths here</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-not-stack-xyz-into-a-scalar-solver">Why not stack XYZ into a scalar solver?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-the-walkthrough-does">What the walkthrough does</a></li>
 </ul>
   </nav></div>
 

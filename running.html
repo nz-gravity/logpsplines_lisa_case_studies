@@ -34,7 +34,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=9c3e77be" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="_static/case-studies.css?v=859fb48c" />
@@ -67,8 +67,8 @@
     <link rel="icon" href="_static/favicon.png"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Nonstationary A noise" href="time_varying.html" />
-    <link rel="prev" title="LISA case studies" href="intro.html" />
+    <link rel="next" title="1. Generate the data" href="notebooks/01_generate_data.html" />
+    <link rel="prev" title="LISA PSD case studies" href="intro.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -218,26 +218,25 @@
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="intro.html">
-                    LISA case studies
+                    LISA PSD case studies
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Start here</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Install and run</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">LISA case studies</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Notebook walkthroughs</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="time_varying.html">Nonstationary A noise</a></li>
-<li class="toctree-l1"><a class="reference internal" href="xyz.html">Correlated XYZ noise</a></li>
-<li class="toctree-l1"><a class="reference internal" href="gapped_xyz.html">Seven-day evolving XYZ with gaps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/01_generate_data.html">1. Generate the data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/02_time_varying_psd.html">2. Time-varying PSD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/03_xyz_psd.html">3. Standard XYZ estimation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/04_short_xyz_gaps.html">4. Short-duration XYZ with gaps</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Further reading</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="reference_matrix.html">Reference, adaptive bins and theta</a></li>
-<li class="toctree-l1"><a class="reference internal" href="likelihood.html">Exact compressed gap benchmark</a></li>
-<li class="toctree-l1"><a class="reference internal" href="gaplike_xyz.html">Can GapLike fit XYZ?</a></li>
-<li class="toctree-l1"><a class="reference internal" href="models.html">Models and conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebook_models.html">Simulation and likelihood notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gaplike_xyz.html">GapLike and correlated XYZ</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://nz-gravity.github.io/LogPSplinePSD/intro.html">LogPSplinePSD documentation ↗</a></li>
 </ul>
 
@@ -389,9 +388,11 @@
             </div>
             <nav aria-label="Page">
                 <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introductory-cases">Introductory cases</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reproducibility">Reproducibility</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#checks-and-documentation">Checks and documentation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#one-environment-for-all-four-notebooks">One environment for all four notebooks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reading-and-execution-order">Reading and execution order</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#execute-everything-without-jupyterlab">Execute everything without JupyterLab</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reproducibility-and-limits">Reproducibility and limits</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-this-website">Build this website</a></li>
 </ul>
             </nav>
         </div>
@@ -405,72 +406,73 @@
                   
   <section class="tex2jax_ignore mathjax_ignore" id="install-and-run">
 <h1>Install and run<a class="headerlink" href="#install-and-run" title="Link to this heading">#</a></h1>
-<p>Requires Python 3.12+ and <a class="reference external" href="https://docs.astral.sh/uv/">uv</a>.
-Each example creates its own seeded simulation and refuses to overwrite an
-existing output directory.</p>
+<p>The notebooks are already executed on this website. To change a setting or
+rerun a lesson, use the download button at the top of its page or open the
+notebooks in a repository checkout.</p>
+<section id="one-environment-for-all-four-notebooks">
+<h2>One environment for all four notebooks<a class="headerlink" href="#one-environment-for-all-four-notebooks" title="Link to this heading">#</a></h2>
+<p>Requires Python 3.12+ and <a class="reference external" href="https://docs.astral.sh/uv/">uv</a>.</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/nz-gravity/logpsplines_lisa_case_studies.git
 <span class="nb">cd</span><span class="w"> </span>logpsplines_lisa_case_studies
-git<span class="w"> </span>checkout<span class="w"> </span>6837a066c46afce78ff9cd58d372a1ae5ba0ac37
-uv<span class="w"> </span>sync<span class="w"> </span>--locked<span class="w"> </span>--extra<span class="w"> </span>gapped
-uv<span class="w"> </span>run<span class="w"> </span>--extra<span class="w"> </span>gapped<span class="w"> </span>lisa-demo-gaps<span class="w"> </span>--output<span class="w"> </span>outputs/seven_day
+git<span class="w"> </span>checkout<span class="w"> </span>f7fa624323db7dc2c1166d7f0185eaf8e02c1073
+uv<span class="w"> </span>sync<span class="w"> </span>--locked<span class="w"> </span>--extra<span class="w"> </span>gapped<span class="w"> </span>--group<span class="w"> </span>notebooks<span class="w"> </span>--group<span class="w"> </span>docs
+uv<span class="w"> </span>run<span class="w"> </span>--no-sync<span class="w"> </span>jupyter<span class="w"> </span>lab<span class="w"> </span>docs/notebooks
 </pre></div>
 </div>
-<p>The checkout selects the illustrated scientific version, including while
-<a class="reference external" href="https://github.com/nz-gravity/logpsplines_lisa_case_studies/pull/1">PR #1</a> awaits merge.</p>
-<p>The default seven-day case runs offline Keplerian orbits, a full matrix
-reference correction, adaptive coarse-graining and marginalised-theta VI.
-It also reruns the exact compressed Gaussian gap benchmark on the same record.
-Three VI restarts use 6,000 updates per Cholesky row and 256 stored draws.</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>uv<span class="w"> </span>run<span class="w"> </span>--extra<span class="w"> </span>gapped<span class="w"> </span>lisa-demo-gaps<span class="w"> </span>--quick<span class="w"> </span>--output<span class="w"> </span>outputs/seven_day_quick
-uv<span class="w"> </span>run<span class="w"> </span>--extra<span class="w"> </span>gapped<span class="w"> </span>lisa-demo-gaps<span class="w"> </span>--benchmark-only<span class="w"> </span>--output<span class="w"> </span>outputs/benchmark
-</pre></div>
-</div>
-<p>Quick mode keeps the full seven days at five-second cadence and uses all
-59,634 native main-fit frequencies. It shortens VI to 1,500 updates per row
-and 64 stored draws, and uses fewer source bands and benchmark features.
-It checks execution, not posterior accuracy.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--vi-steps</span></code> changes updates per row and <code class="docutils literal notranslate"><span class="pre">--vi-restarts</span></code> changes the restart
-count (at least two). All entry points accept <code class="docutils literal notranslate"><span class="pre">--seed</span></code> and <code class="docutils literal notranslate"><span class="pre">--output</span></code>; the
-numbered scripts call the same implementations. The optional <code class="docutils literal notranslate"><span class="pre">--orbit</span> <span class="pre">esa</span></code>
-path downloads lisaorbits’ ESA trailing ephemerides; the published example
-uses Keplerian orbits.</p>
-<section id="introductory-cases">
-<h2>Introductory cases<a class="headerlink" href="#introductory-cases" title="Link to this heading">#</a></h2>
-<p>These need no optional orbit or gap dependencies:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>uv<span class="w"> </span>run<span class="w"> </span>lisa-demo-time<span class="w"> </span>--quick<span class="w"> </span>--output<span class="w"> </span>outputs/time_quick
-uv<span class="w"> </span>run<span class="w"> </span>lisa-demo-xyz<span class="w"> </span>--quick<span class="w"> </span>--output<span class="w"> </span>outputs/xyz_quick
-</pre></div>
-</div>
-<p>Omit <code class="docutils literal notranslate"><span class="pre">--quick</span></code> for their illustrated settings. The scalar case is a
-local-coefficient VI example; the basic XYZ case is a two-parameter NUTS fit.
-Neither is the full seven-day matrix reconstruction.</p>
+<p>The checkout selects the illustrated notebook version, including while
+<a class="reference external" href="https://github.com/nz-gravity/logpsplines_lisa_case_studies/pull/1">PR #1</a>
+awaits merge. Use the project <code class="docutils literal notranslate"><span class="pre">.venv</span></code> Python as the notebook kernel.</p>
 </section>
-<section id="reproducibility">
-<h2>Reproducibility<a class="headerlink" href="#reproducibility" title="Link to this heading">#</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> pins LogPSplinePSD and GapLike to exact Git commits and
-<code class="docutils literal notranslate"><span class="pre">uv.lock</span></code> fixes this independent environment. The newer library pin is used
-only here; no published paper reproduction environment is changed.
-Each <code class="docutils literal notranslate"><span class="pre">run.json</span></code> records settings, source hashes and limitations. The exact
-benchmark has a separate <code class="docutils literal notranslate"><span class="pre">benchmark_run.json</span></code>. Curated previews and receipts
-are in <code class="docutils literal notranslate"><span class="pre">docs/assets/</span></code>; generated time series and fit arrays stay in <code class="docutils literal notranslate"><span class="pre">outputs/</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">*_correction.nc</span></code> contains a library HDF5-backed <code class="docutils literal notranslate"><span class="pre">PSDResult</span></code>, not a generic
-NetCDF-4 file. Read it with <code class="docutils literal notranslate"><span class="pre">PSDResult.from_netcdf</span></code>. Its spectra are in
-reference coordinates and its frequency axis uses log-frequency spline
-coordinates. Physical native-frequency reconstructions and the observation
-references are saved separately in <code class="docutils literal notranslate"><span class="pre">matrix_recovery.npz</span></code>.</p>
+<section id="reading-and-execution-order">
+<h2>Reading and execution order<a class="headerlink" href="#reading-and-execution-order" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p><strong><a class="reference internal" href="notebooks/01_generate_data.html"><span class="std std-doc">Generate the data</span></a></strong> first. It writes
+the shared seeded time series and observation windows.</p></li>
+<li><p>Choose <strong><a class="reference internal" href="notebooks/02_time_varying_psd.html"><span class="std std-doc">time-varying channel A</span></a></strong>
+or <strong><a class="reference internal" href="notebooks/03_xyz_psd.html"><span class="std std-doc">standard XYZ</span></a></strong>.</p></li>
+<li><p>Continue to <strong><a class="reference internal" href="notebooks/04_short_xyz_gaps.html"><span class="std std-doc">short-duration XYZ with gaps</span></a></strong>
+for the orbit reference, adaptive bins and exact covariance check.</p></li>
+</ol>
+<p>Each estimation notebook has its own imports and loads the saved input files.
+It does not rely on variables left in another kernel. Use <strong>Restart Kernel
+and Run All Cells</strong> to check a clean execution. If a dataset is missing, the
+notebook tells you to run notebook 1.</p>
+<p>All inputs and fitted arrays are written under <code class="docutils literal notranslate"><span class="pre">outputs/notebooks/</span></code>, which
+is ignored by Git. Rerunning notebook 1 regenerates its seeded data. Downloading
+one notebook alone is useful for reading; executing it also requires the
+checkout’s small simulation helpers and shared data.</p>
 </section>
-<section id="checks-and-documentation">
-<h2>Checks and documentation<a class="headerlink" href="#checks-and-documentation" title="Link to this heading">#</a></h2>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>uv<span class="w"> </span>run<span class="w"> </span>--extra<span class="w"> </span>gapped<span class="w"> </span>pytest<span class="w"> </span>-q
-uv<span class="w"> </span>run<span class="w"> </span>ruff<span class="w"> </span>check<span class="w"> </span>.
-uv<span class="w"> </span>run<span class="w"> </span>ruff<span class="w"> </span>format<span class="w"> </span>--check<span class="w"> </span>.
-uv<span class="w"> </span>run<span class="w"> </span>--group<span class="w"> </span>docs<span class="w"> </span>jupyter-book<span class="w"> </span>build<span class="w"> </span>docs<span class="w"> </span>--warningiserror
+<section id="execute-everything-without-jupyterlab">
+<h2>Execute everything without JupyterLab<a class="headerlink" href="#execute-everything-without-jupyterlab" title="Link to this heading">#</a></h2>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>uv<span class="w"> </span>run<span class="w"> </span>--no-sync<span class="w"> </span>python<span class="w"> </span>scripts/execute_notebooks.py
 </pre></div>
 </div>
-<p>The website uses the library’s Jupyter Book / Sphinx Book Theme and logo.
-It builds from committed results without running inference. Pull requests
-build the site and run scientific tests plus the seven-day quick case;
-<code class="docutils literal notranslate"><span class="pre">main</span></code> publishes to GitHub Pages.</p>
+<p>This executes the notebooks in order with a fresh project-environment kernel
+for each, saving figures, tables and execution counts in the <code class="docutils literal notranslate"><span class="pre">.ipynb</span></code> files.
+The execution time depends on your machine; the notebooks use VI to keep
+the examples small. There is no hidden NUTS job or cluster submission.</p>
+</section>
+<section id="reproducibility-and-limits">
+<h2>Reproducibility and limits<a class="headerlink" href="#reproducibility-and-limits" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> pins LogPSplinePSD and GapLike to exact Git commits;
+<code class="docutils literal notranslate"><span class="pre">uv.lock</span></code> fixes the notebook environment. The source generator hash and
+package versions are recorded beside the generated data. No published paper
+environment is changed. All examples estimate channel PSDs and spectral
+matrices, rather than instrument-noise component levels.</p>
+<p>Read the <a class="reference internal" href="notebook_models.html"><span class="std std-doc">simulation and likelihood notes</span></a> for the
+observation approximations and the scope of the exact benchmark.
+<a class="reference internal" href="gaplike_xyz.html"><span class="std std-doc">GapLike and correlated XYZ</span></a> explains why a scalar
+independent-channel likelihood cannot simply be applied to XYZ.</p>
+</section>
+<section id="build-this-website">
+<h2>Build this website<a class="headerlink" href="#build-this-website" title="Link to this heading">#</a></h2>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>uv<span class="w"> </span>run<span class="w"> </span>--no-sync<span class="w"> </span>jupyter-book<span class="w"> </span>build<span class="w"> </span>docs<span class="w"> </span>--warningiserror
+uv<span class="w"> </span>run<span class="w"> </span>--no-sync<span class="w"> </span>python<span class="w"> </span>scripts/check_docs.py<span class="w"> </span>docs/_build/html
+</pre></div>
+</div>
+<p>The book displays committed notebook outputs and does not run inference
+while building. It shares the library’s Jupyter Book theme, logo and return
+navigation. Older case-study page URLs redirect to the corresponding notebooks.</p>
 </section>
 </section>
 
@@ -510,15 +512,15 @@ build the site and run scientific tests plus the seven-day quick case;
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">LISA case studies</p>
+        <p class="prev-next-title">LISA PSD case studies</p>
       </div>
     </a>
     <a class="right-next"
-       href="time_varying.html"
+       href="notebooks/01_generate_data.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Nonstationary A noise</p>
+        <p class="prev-next-title">1. Generate the data</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -540,9 +542,11 @@ build the site and run scientific tests plus the seven-day quick case;
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introductory-cases">Introductory cases</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reproducibility">Reproducibility</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#checks-and-documentation">Checks and documentation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#one-environment-for-all-four-notebooks">One environment for all four notebooks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reading-and-execution-order">Reading and execution order</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#execute-everything-without-jupyterlab">Execute everything without JupyterLab</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reproducibility-and-limits">Reproducibility and limits</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-this-website">Build this website</a></li>
 </ul>
   </nav></div>
 

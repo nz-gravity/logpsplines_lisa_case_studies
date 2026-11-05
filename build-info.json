@@ -1,5 +1,6 @@
 {
-  "source_commit": "24135358371b3c67fc2c064cb94636679b470e2f",
-  "scientific_commit": "6837a066c46afce78ff9cd58d372a1ae5ba0ac37",
-  "source_branch": "prototype/seven-day-orbit-gap-reference"
+  "source_commit": "e5717d6c09688b24a3f8a2de133b6ad481c0932e",
+  "notebook_commit": "f7fa624323db7dc2c1166d7f0185eaf8e02c1073",
+  "source_branch": "prototype/seven-day-orbit-gap-reference",
+  "description": "Four executed channel-level LISA notebook walkthroughs"
 }
