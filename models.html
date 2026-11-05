@@ -67,7 +67,7 @@
     <link rel="icon" href="_static/favicon.png"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Joint gap-aware likelihood" href="likelihood.html" />
+    <link rel="prev" title="Can GapLike fit XYZ?" href="gaplike_xyz.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -233,7 +233,9 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="likelihood.html">Joint gap-aware likelihood</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference_matrix.html">Reference, adaptive bins and theta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="likelihood.html">Exact compressed gap benchmark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gaplike_xyz.html">Can GapLike fit XYZ?</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Models and conventions</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://nz-gravity.github.io/LogPSplinePSD/intro.html">LogPSplinePSD documentation ↗</a></li>
 </ul>
@@ -449,9 +451,12 @@ matrices. Do not compare the raw XYZ amplitudes across cases without their
 transfer functions.</p>
 <p>Orbit-epoch filters act on shared stationary Fourier sources and are
 interpolated in time. A real gate/window and selected Fourier transform
-produce the observations. The <a class="reference internal" href="likelihood.html"><span class="std std-doc">joint likelihood</span></a> propagates
-those same operators, retaining all correlations for the compressed
-features. This is an explicit discretized, quasi-static simulation, without
+produce the observations. The <a class="reference internal" href="likelihood.html"><span class="std std-doc">exact benchmark</span></a> propagates
+those same operators, retaining all correlations for its compressed
+features. The main <a class="reference internal" href="reference_matrix.html"><span class="std std-doc">full matrix spline correction</span></a>
+uses a window-aware nominal reference, adaptive Whittle statistics and
+analytically marginalised Cholesky theta; it is an independent-frequency
+approximation. This is an explicit discretized, quasi-static simulation, without
 the paper’s full instrument and conditioning chain.</p>
 </section>
 </section>
@@ -487,12 +492,12 @@ the paper’s full instrument and conditioning chain.</p>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="likelihood.html"
+       href="gaplike_xyz.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Joint gap-aware likelihood</p>
+        <p class="prev-next-title">Can GapLike fit XYZ?</p>
       </div>
     </a>
 </div>

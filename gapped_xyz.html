@@ -61,13 +61,15 @@
     <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'gapped_xyz';</script>
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="canonical" href="https://nz-gravity.github.io/logpsplines_lisa_case_studies/gapped_xyz.html" />
     <link rel="icon" href="_static/favicon.png"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Joint gap-aware likelihood" href="likelihood.html" />
+    <link rel="next" title="Parametric reference and multivariate correction" href="reference_matrix.html" />
     <link rel="prev" title="Correlated XYZ noise" href="xyz.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -234,7 +236,9 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="likelihood.html">Joint gap-aware likelihood</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference_matrix.html">Reference, adaptive bins and theta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="likelihood.html">Exact compressed gap benchmark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gaplike_xyz.html">Can GapLike fit XYZ?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="models.html">Models and conventions</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://nz-gravity.github.io/LogPSplinePSD/intro.html">LogPSplinePSD documentation ↗</a></li>
 </ul>
@@ -387,11 +391,11 @@
             </div>
             <nav aria-label="Page">
                 <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#following-the-short-segment-orbit-idea">Following the short-segment orbit idea</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-the-spline-learns">What the spline learns</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#observations-and-likelihood">Observations and likelihood</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#saved-seed-7-result">Saved seed-7 result</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#outputs-and-reproducibility">Outputs and reproducibility</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reference-plus-a-full-matrix-correction">Reference plus a full matrix correction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#adaptive-bins-and-marginalised-theta">Adaptive bins and marginalised theta</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-exact-and-what-is-approximate">What is exact, and what is approximate?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#saved-standard-result-seed-7">Saved standard result, seed 7</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#outputs">Outputs</a></li>
 </ul>
             </nav>
         </div>
@@ -405,150 +409,176 @@
                   
   <section class="tex2jax_ignore mathjax_ignore" id="seven-day-evolving-xyz-with-gaps">
 <h1>Seven-day evolving XYZ with gaps<a class="headerlink" href="#seven-day-evolving-xyz-with-gaps" title="Link to this heading">#</a></h1>
-<p>This case simulates <strong>120,960 real XYZ samples over seven days</strong>, at a
-five-second cadence, and recovers smooth secondary-noise spectra through an
-evolving, unequal-arm TDI-2 response. The same simulated record is observed
-continuously and with two gaps. Both fits use a joint gap-aware Gaussian
-likelihood, retaining XYZ, cross-frequency and real/imaginary correlations.</p>
+<p>This case simulates <strong>120,960 real XYZ samples over seven days</strong> at a
+five-second cadence. A parametric orbit response places the moving dips;
+a full multivariate log-P-spline learns a smooth correction to that response.
+Continuous and gapped observations use identical priors, knots, adaptive bins
+and final evaluation support.</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>uv<span class="w"> </span>sync<span class="w"> </span>--locked<span class="w"> </span>--extra<span class="w"> </span>gapped
 uv<span class="w"> </span>run<span class="w"> </span>--extra<span class="w"> </span>gapped<span class="w"> </span>lisa-demo-gaps<span class="w"> </span>--output<span class="w"> </span>outputs/seven_day
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">--quick</span></code> retains seven days and the native 1.65 microHz frequency spacing,
-but reduces the number of source bands and fitting features.</p>
-<section id="following-the-short-segment-orbit-idea">
-<h2>Following the short-segment orbit idea<a class="headerlink" href="#following-the-short-segment-orbit-idea" title="Link to this heading">#</a></h2>
-<p><a class="reference external" href="https://arxiv.org/html/2610.28726v1">Burke et al., <em>Noisy Pipelines I</em></a>
-use four seven-day segments from a longer simulation, with eight orbit epochs
-per segment. Stationary TM/OMS secondary spectra acquire nonstationarity
-through the changing light travel times. Their likelihood averages covariance
-kernels across epochs and includes data conditioning; their example has no gaps.</p>
-<p>Here, <a class="reference external" href="https://gitlab.in2p3.fr/lisa-simulation/orbits">lisaorbits</a>’ offline
-Keplerian approximation supplies six directed photon travel times. The
-paper’s TDI-2 mixing matrix maps stationary link noises to XYZ. At eight
-epochs we construct response filters, then interpolate their <strong>time-domain
-outputs using a partition of unity</strong>. Every epoch acts on the same link-noise
-realization. This preserves cross-epoch correlations and produces genuinely
-time-varying XYZ, rather than a draw from an orbit-averaged stationary spectrum.</p>
-<p>This is a quasi-static filter simulation. It does not reproduce noncommuting
-time-delay operators, the paper’s ESA orbit, or its filtering/decimation chain.
-The known geometry places the dips; their positions are not fitted sine parameters.</p>
+<section id="reference-plus-a-full-matrix-correction">
+<h2>Reference plus a full matrix correction<a class="headerlink" href="#reference-plus-a-full-matrix-correction" title="Link to this heading">#</a></h2>
+<p>Write the known physical reference as <span class="math notranslate nohighlight">\(S_0(t,f)=L_0(t,f)L_0(t,f)^\dagger\)</span>.
+The recovered spectrum is</p>
+<div class="math notranslate nohighlight">
+\[S(t,f)=L_0(t,f)\,R(f)\,L_0(t,f)^\dagger.\]</div>
+<p>The positive-definite matrix <span class="math notranslate nohighlight">\(R(f)\)</span> uses <strong>nine real spline fields</strong>:
+three log innovation variances and the real/imaginary parts of three
+cross-channel Cholesky regression coefficients. This learns changes in
+cross spectra and coherence as well as auto spectra. <span class="math notranslate nohighlight">\(R=I\)</span> gives the
+uncorrected parametric reference. Dip positions are not additional sine-fit
+parameters.</p>
+<p>The residual correction is frequency-dependent. Orbital evolution supplies
+the time variation over this short segment; freely varying residual time
+surfaces are not inferred. This follows the short-segment idea in
+<a class="reference external" href="https://arxiv.org/html/2610.28726v1">Burke et al., <em>Noisy Pipelines I</em></a>,
+using offline Keplerian orbits instead of their ESA ephemerides.</p>
+<p>The simulator applies eight orbit-epoch TDI-2 response filters to the
+<strong>same stationary link-noise realization</strong>, interpolating their time-domain
+outputs with a partition of unity. It is genuinely time-varying, but remains
+a quasi-static approximation to noncommuting TDI delays. It omits the
+paper’s full instrument, filtering and decimation chain. Its declared
+source-frequency bands discretize the injected secondary spectra; those
+bands are distinct from adaptive likelihood bins.</p>
 </section>
-<section id="what-the-spline-learns">
-<h2>What the spline learns<a class="headerlink" href="#what-the-spline-learns" title="Link to this heading">#</a></h2>
-<p>Two cubic log-P-splines describe frequency-dependent multiplicative
-corrections to the nominal TM and OMS link PSDs. The evolving response
-propagates these recovered spectra into the full complex XYZ spectral matrix
-at any epoch. The secondary spectra are stationary, as in the paper’s
-short-segment model; no freely varying time-spline coefficients are inferred.</p>
-<p>Each component uses seven library <code class="docutils literal notranslate"><span class="pre">SplineBasis</span></code> functions on log frequency
-and the library’s trace-normalized integrated second-derivative penalty.
-A fixed proper Gaussian prior has precision <code class="docutils literal notranslate"><span class="pre">10</span> <span class="pre">P</span> <span class="pre">+</span> <span class="pre">I</span> <span class="pre">/</span> <span class="pre">0.8²</span></code> for natural-log
-PSD weights. Continuous and gapped fits have identical source bands, basis,
-penalty, prior, frequencies and evaluation grid. Knots and regularization are
-specified before simulation. There is no model selection on the evaluation
-truth or independent validation data.</p>
-<p>For tractability, log corrections are constant within 32 declared
-logarithmic source-frequency bands (16 in quick mode). The physical transfer
-is still evaluated at <strong>every native Fourier bin</strong>, including around the
-response nulls. This band discretization belongs to both the simulator and
-its likelihood; it is not hidden interpolation error.</p>
+<section id="adaptive-bins-and-marginalised-theta">
+<h2>Adaptive bins and marginalised theta<a class="headerlink" href="#adaptive-bins-and-marginalised-theta" title="Link to this heading">#</a></h2>
+<p>The main fit uses all <strong>59,634 native Fourier bins</strong> from 0.4 to 99 mHz.
+It whitens each coefficient by its own orbit-and-window reference before
+pooling. The nominal reference includes all epoch cross terms and the actual
+GapLike gap gate and taper.</p>
+<p>The library’s adaptive matrix pilot selects bin edges from <strong>gapped training
+data only</strong>. The same partition is frozen for both observations before
+inference. Full complex cross-products and their counts are summed from
+unsmoothed native data. Prespecified 0.1 mHz neighbourhoods around the
+30, 60 and 90 mHz nulls retain native bins. In the saved run, 59,634 native
+frequencies become 599 aggregates, with widths from 1 to 256.</p>
+<p>Both fits use twelve cubic basis functions for each of the nine fields,
+on log-frequency coordinates. The pinned library analytically marginalises
+the six Gaussian theta spline fields while fitting the three diagonal
+fields and smoothing scales with VI. It restores theta from the exact
+conditional Gaussian before reconstructing matrices. Three VI restarts use
+6,000 updates per row; their selection uses training ELBO only.
+See the <a class="reference internal" href="reference_matrix.html"><span class="std std-doc">model, priors and inference details</span></a>.</p>
 </section>
-<section id="observations-and-likelihood">
-<h2>Observations and likelihood<a class="headerlink" href="#observations-and-likelihood" title="Link to this heading">#</a></h2>
-<p><a class="reference external" href="https://github.com/gaplike/gaplike">GapLike</a> constructs four-hour and six-hour
-gaps at days 1.5 and 4.25, with 30-minute edge tapers and a common segment
-Tukey window. The un-tapered duty cycle is 94.05%. Zero-filled samples are
-never counted as additional observations.</p>
-<p>The standard inference retains 48 prespecified complex XYZ Fourier bins
-(288 real features), including neighbouring native bins at the nominal
-30, 60 and 90 mHz response nulls. Its likelihood is <strong>exact for this fixed
-compressed feature vector under the declared simulator</strong>, not for all
-120,960 × 3 samples. It propagates the actual mask/window and all epoch
-filters into the joint real covariance. It includes the pseudo-covariance
-that a proper-complex likelihood would omit. See the
-<a class="reference internal" href="likelihood.html"><span class="std std-doc">joint likelihood derivation and checks</span></a>.</p>
-<p>A third fit keeps the correct per-bin 6×6 real covariance but drops
-inter-frequency correlations. This is an explicitly labelled approximation,
-not uncorrected zero-filled Whittle inference. All three fits use three MAP
-optimization restarts. They produce point reconstructions, not VI or NUTS
-posterior intervals.</p>
+<section id="what-is-exact-and-what-is-approximate">
+<h2>What is exact, and what is approximate?<a class="headerlink" href="#what-is-exact-and-what-is-approximate" title="Link to this heading">#</a></h2>
+<p>The main matrix correction uses an <strong>independent-frequency Whittle
+approximation</strong>. It models all XYZ cross spectra, but does not retain
+cross-frequency covariance or real-data pseudo-covariance. The nominal
+window reference is exact for the declared simulator’s same-frequency
+covariance; propagating an arbitrary residual correction through that
+reference is still an approximation.</p>
+<p>The retained <strong>exact joint Gaussian benchmark</strong> includes channel, frequency,
+quadrature and epoch correlations for 48 selected Fourier bins / 288 real
+features. It fits two smooth secondary-component corrections with MAP and
+its own priors. Its smaller information budget and narrower model make it
+a covariance control, not an equal-information contest with full matrix VI.
+<a class="reference internal" href="likelihood.html"><span class="std std-doc">Benchmark derivation and controls</span></a>.</p>
+<p><strong>GapLike is useful for XYZ.</strong> Its current independent-channel likelihood
+is not a drop-in correlated XYZ likelihood. We use its observation tools
+and explicitly extend the covariance to XYZ. The
+<a class="reference internal" href="gaplike_xyz.html"><span class="std std-doc">GapLike and XYZ explanation</span></a> distinguishes these pieces.</p>
 </section>
-<section id="saved-seed-7-result">
-<h2>Saved seed-7 result<a class="headerlink" href="#saved-seed-7-result" title="Link to this heading">#</a></h2>
-<p><img alt="Seven-day spline recovery" src="_images/seven_day_xyz.png" /></p>
+<section id="saved-standard-result-seed-7">
+<h2>Saved standard result, seed 7<a class="headerlink" href="#saved-standard-result-seed-7" title="Link to this heading">#</a></h2>
+<p><img alt="Reference-corrected multivariate spline recovery" src="_images/seven_day_xyz.png" /></p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
-<tr class="row-odd"><th class="head"><p>Fit</p></th>
+<tr class="row-odd"><th class="head"><p>Reconstruction</p></th>
+<th class="head"><p>Fitting target</p></th>
 <th class="head text-right"><p>Auto log10 RMSE</p></th>
 <th class="head text-right"><p>Signed log10 residual</p></th>
 <th class="head text-right"><p>Complex cross RMSE*</p></th>
 <th class="head text-right"><p>Coherence RMSE</p></th>
-<th class="head text-right"><p>Validation q / dimension</p></th>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>continuous</p></td>
+<tr class="row-even"><td><p>parametric reference</p></td>
+<td><p>reference only</p></td>
+<td class="text-right"><p>0.0808</p></td>
+<td class="text-right"><p>-0.0411</p></td>
+<td class="text-right"><p>0.0575</p></td>
+<td class="text-right"><p>0.0004</p></td>
+</tr>
+<tr class="row-odd"><td><p>continuous</p></td>
+<td><p>adaptive Whittle, collapsed VI</p></td>
+<td class="text-right"><p>0.0141</p></td>
+<td class="text-right"><p>-0.0035</p></td>
+<td class="text-right"><p>0.0152</p></td>
+<td class="text-right"><p>0.0033</p></td>
+</tr>
+<tr class="row-even"><td><p>gapped</p></td>
+<td><p>adaptive Whittle, collapsed VI</p></td>
+<td class="text-right"><p>0.0143</p></td>
+<td class="text-right"><p>-0.0037</p></td>
+<td class="text-right"><p>0.0156</p></td>
+<td class="text-right"><p>0.0045</p></td>
+</tr>
+<tr class="row-odd"><td><p>exact continuous benchmark</p></td>
+<td><p>exact compressed Gaussian MAP</p></td>
 <td class="text-right"><p>0.0633</p></td>
 <td class="text-right"><p>+0.0141</p></td>
 <td class="text-right"><p>0.0364</p></td>
 <td class="text-right"><p>0.0002</p></td>
-<td class="text-right"><p>0.951</p></td>
 </tr>
-<tr class="row-odd"><td><p>gapped</p></td>
+<tr class="row-even"><td><p>exact gapped benchmark</p></td>
+<td><p>exact compressed Gaussian MAP</p></td>
 <td class="text-right"><p>0.0738</p></td>
 <td class="text-right"><p>+0.0157</p></td>
 <td class="text-right"><p>0.0330</p></td>
 <td class="text-right"><p>0.0001</p></td>
-<td class="text-right"><p>1.015</p></td>
-</tr>
-<tr class="row-even"><td><p>gapped independent bins</p></td>
-<td class="text-right"><p>0.0699</p></td>
-<td class="text-right"><p>+0.0109</p></td>
-<td class="text-right"><p>0.0298</p></td>
-<td class="text-right"><p>0.0001</p></td>
-<td class="text-right"><p>1.020</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>*Complex cross errors normalized by the geometric mean of the corresponding true auto spectra. Four independent validation realizations; q/d should be near 1 in expectation, not forced by an in-sample amplitude fit.</p>
-<p>All fits use the same 7 cubic basis functions per component and the same proper Gaussian prior; no knot tuning or posterior uncertainty claim.</p>
-<p>The continuous reconstruction is slightly more accurate in this realization.
-The gap-aware and independent-bin fits are close; the independent-bin point
-estimate has slightly lower reconstruction RMSE here. This single paired
-simulation does <strong>not</strong> establish a scientific advantage for either
-approximation. The exact likelihood supplies a controlled benchmark.</p>
-<p>Reconstruction scores cover all XYZ auto spectra, complex cross spectra and
-coherence on a fixed grid of 17 epochs, logarithmic frequencies, and native
-bins within 0.6 mHz of the three nulls. <code class="docutils literal notranslate"><span class="pre">errors.json</span></code> also reports signed
-residuals and adjacent-frequency residual differences in each null window.
-The known response strongly constrains the dip shapes; small oscillation
-scores do not demonstrate that unconstrained splines discover the nulls.</p>
-<p>Four independent realizations, seeds 1007–1010, provide final predictive
-checks. Their quadratics are scored with the <strong>full</strong> covariance for every
-candidate; an injected-covariance control is also saved. No evaluation data
-are used for fits or restarts. The in-sample amplitude score is not used as
-a goodness-of-fit claim. A small validation sample does not calibrate
-posterior uncertainty or demonstrate ensemble coverage.</p>
+<p>*Complex cross errors are normalized by the geometric mean of the true auto spectra. Fixed 17-epoch evaluation grid with native null neighbourhoods. The library fits use all retained native frequencies, pooled into a shared adaptive partition; the exact benchmark uses a much smaller feature set and a two-component model. These rows do not isolate the effect of the likelihood or establish posterior calibration.</p>
+<p>The full correction reduces auto-spectrum error relative to the uncorrected
+reference in this realization. Continuous and gapped errors are close.
+Coherence error is larger than for the tightly constrained two-component
+benchmark: additional matrix flexibility does not improve every metric.
+The benchmark uses fewer data and different priors, so its RMSE does not
+establish which likelihood is superior.</p>
+<p>Scores use the same fixed 17-epoch reconstruction grid and native bins
+within 0.6 mHz of all three nulls. Detailed errors include signed residuals,
+complex cross spectra, coherence and adjacent-frequency residual differences.
+Known geometry strongly constrains the dip shapes; these plots do not show
+unconstrained splines discovering response zeros.</p>
+<p>All standard-run rows and restarts satisfy the stated ELBO plateau check.
+The maximum restart disagreement in reconstructed auto spectra is about
+0.0016 dex. <a class="reference download internal" download="" href="_downloads/18ba78200933aef6fc5b032bfff5781a/seven_day_elbo.png"><span class="xref download myst">ELBO traces</span></a> and the
+<a class="reference download internal" download="" href="_downloads/207fae2b7e1b61d6733fd7fbec9e4c22/seven_day_errors.json"><span class="xref download myst">detailed diagnostics</span></a> accompany the result.
+These are numerical checks of exploratory VI, not proof of posterior
+accuracy or NUTS-equivalent uncertainty.</p>
+<p>Four independent realizations, seeds 1007–1010, are generated only after
+partition selection and fitting. Their mean marginal quadratic per dimension
+is approximately 1.000 for both observations. The benchmark separately
+scores its full joint Gaussian on the same independent seeds. No raw
+ELBO/likelihood comparison is made across these different targets, and no
+NUTS recommendation follows from this single simulation.</p>
 </section>
-<section id="outputs-and-reproducibility">
-<h2>Outputs and reproducibility<a class="headerlink" href="#outputs-and-reproducibility" title="Link to this heading">#</a></h2>
+<section id="outputs">
+<h2>Outputs<a class="headerlink" href="#outputs" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">comparison.png</span></code>: the compact continuous/gapped comparison above.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">recovery.npz</span></code>: real XYZ data, masks, windows, native bin indices, source
-bands, library basis/penalty, injected and fitted corrections, and full
-reconstructed spectral matrices.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">errors.json</span></code> and <code class="docutils literal notranslate"><span class="pre">errors.md</span></code>: reconstruction and independent predictive
-scores, optimization objectives, gradients and all restart results.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">run.json</span></code>: dependency versions, Git/source hashes, orbit and observation
-settings, validation seeds and approximation limits.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">comparison.png</span></code>, <code class="docutils literal notranslate"><span class="pre">errors.md</span></code>, <code class="docutils literal notranslate"><span class="pre">errors.json</span></code>: main comparison and diagnostics.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">matrix_recovery.npz</span></code>: physical spectral matrices, corrections, native
+frequencies, actual adaptive edges/counts and conditioned references.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">continuous_correction.nc</span></code>, <code class="docutils literal notranslate"><span class="pre">gapped_correction.nc</span></code>: library <code class="docutils literal notranslate"><span class="pre">PSDResult</span></code>
+files with restored theta draws, in reference coordinates. These are
+HDF5-backed; use <code class="docutils literal notranslate"><span class="pre">PSDResult.from_netcdf</span></code>. Frequency coordinates in these
+files are log-frequency spline coordinates, not Hz.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">*_basis.npz</span></code>, <code class="docutils literal notranslate"><span class="pre">*_elbo.npz</span></code>, <code class="docutils literal notranslate"><span class="pre">*_vi.json</span></code>, <code class="docutils literal notranslate"><span class="pre">elbo.png</span></code>: actual library bases,
+penalties, three-restart loss traces and stability checks.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">benchmark_comparison.png</span></code>, <code class="docutils literal notranslate"><span class="pre">benchmark_errors.*</span></code>, <code class="docutils literal notranslate"><span class="pre">benchmark_run.json</span></code>,
+<code class="docutils literal notranslate"><span class="pre">recovery.npz</span></code>: the exact compressed control and its real simulated data.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">run.json</span></code>: versions, source hashes, approximations and validation settings.</p></li>
 </ul>
-<p>The <a class="reference download internal" download="" href="_downloads/9217b2d9a03496fc533aab86fbea14de/seven_day_run.json"><span class="xref download myst">saved receipt</span></a> and
-<a class="reference download internal" download="" href="_downloads/207fae2b7e1b61d6733fd7fbec9e4c22/seven_day_errors.json"><span class="xref download myst">detailed errors</span></a> accompany this figure. The
-old stationary-surrogate prototype remains available as
-<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">lisa_case_studies.stationary_gap_control</span></code> for historical controls;
-<code class="docutils literal notranslate"><span class="pre">lisa-demo-gaps</span></code> runs the time-varying spline case described here.</p>
+<p>The <a class="reference download internal" download="" href="_downloads/9217b2d9a03496fc533aab86fbea14de/seven_day_run.json"><span class="xref download myst">saved receipt</span></a> records the source version.
+Use <code class="docutils literal notranslate"><span class="pre">--benchmark-only</span></code> to run the exact control alone. <code class="docutils literal notranslate"><span class="pre">--quick</span></code> keeps all
+seven days and all native bins in the main fit, with shorter VI, fewer stored
+draws, fewer source bands and a smaller exact benchmark.</p>
 </section>
 </section>
 
@@ -592,11 +622,11 @@ old stationary-surrogate prototype remains available as
       </div>
     </a>
     <a class="right-next"
-       href="likelihood.html"
+       href="reference_matrix.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Joint gap-aware likelihood</p>
+        <p class="prev-next-title">Parametric reference and multivariate correction</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -618,11 +648,11 @@ old stationary-surrogate prototype remains available as
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#following-the-short-segment-orbit-idea">Following the short-segment orbit idea</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-the-spline-learns">What the spline learns</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#observations-and-likelihood">Observations and likelihood</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#saved-seed-7-result">Saved seed-7 result</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#outputs-and-reproducibility">Outputs and reproducibility</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reference-plus-a-full-matrix-correction">Reference plus a full matrix correction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#adaptive-bins-and-marginalised-theta">Adaptive bins and marginalised theta</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-exact-and-what-is-approximate">What is exact, and what is approximate?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#saved-standard-result-seed-7">Saved standard result, seed 7</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#outputs">Outputs</a></li>
 </ul>
   </nav></div>
 

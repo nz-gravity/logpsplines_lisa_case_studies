@@ -1,7 +1,8 @@
-# Joint gap-aware likelihood
+# Exact compressed gap benchmark
 
-The seven-day case combines a known orbit response with smooth learned
-secondary-noise spectra. GapLike provides the masks and windows. Its
+The main seven-day case uses a [full matrix reference correction](reference_matrix.md).
+This retained benchmark combines a known orbit response with two smooth learned
+secondary-noise spectra and its own fixed prior. GapLike provides the masks and windows. Its
 stationary scalar likelihood is not used as though it were a correlated,
 nonstationary XYZ likelihood; the joint feature covariance is constructed here.
 
@@ -13,7 +14,7 @@ covariance follow Eqs. 2, 9 and 28–29 of
 [Noisy Pipelines I](https://arxiv.org/html/2610.28726v1).
 Independent stationary real link sources have one-sided spectra
 
-$$P_c(f_j)=P_{c,0}(f_j)\exp\{B_{b(j)}\theta_c\}.$$
+$$P_c(f_j)=P_{c,0}(f_j)\exp\{B_{b(j)}\beta_c\}.$$
 
 Here $b(j)$ is a declared source-frequency band; the library's cubic basis
 $B$ is evaluated at its centre in log frequency. Latent positive-frequency
@@ -38,7 +39,7 @@ at every epoch, epoch cross terms are retained.
 Writing $L_{w,c,b}$ for the real linear map from standardized independent
 link-noise coordinates in source band $b$ to $y_w$ gives
 
-$$C_w(\theta)=\sum_{c,b}\exp\{B_b\theta_c\}\,
+$$C_w(\beta)=\sum_{c,b}\exp\{B_b\beta_c\}\,
  C_{w,c,b},\qquad C_{w,c,b}=L_{w,c,b}L_{w,c,b}^{T}.$$
 
 The implementation accumulates these banks by Fourier convolution of
@@ -56,7 +57,7 @@ Nominal-covariance whitening is fixed before fitting and independent of
 injected truth. It changes the likelihood only by a parameter-independent
 constant. The proper prior is
 
-$$\theta_c\sim N(0,Q^{-1}),\qquad Q=10P+I/0.8^2,$$
+$$\beta_c\sim N(0,Q^{-1}),\qquad Q=10P+I/0.8^2,$$
 
 where $P$ is the library's trace-normalized derivative penalty. MAP
 optimization includes the quadratic prior penalty; the prior determinant
@@ -79,6 +80,13 @@ The independent-bin comparison zeros only inter-frequency covariance
 blocks, retaining each real/imaginary XYZ block. It is fitted as an
 approximation and evaluated on independent data with the full covariance.
 
+The beta weights here are secondary log-PSD corrections. They are not the
+Cholesky regression theta coefficients analytically integrated in the main
+library fit. The benchmark has fewer observations, a narrower model and a
+different prior. Compare its exact versus independent-bin controls within
+`benchmark_errors.json`; do not interpret its RMSE versus full matrix VI as
+a controlled comparison of likelihoods.
+
 ## Independent checks
 
 `tests/test_joint_gaussian.py` constructs an independent dense time-domain
@@ -94,3 +102,19 @@ finite-difference stationarity check. Earlier scientific contracts verify
 the equal-arm TDI-2 limit, complex spectral symmetry, real-series coefficient
 normalization, matrix window convolution, the library Wishart likelihood
 and gradients, and an exact stationary GapLike likelihood-difference control.
+
+## Saved benchmark controls
+
+![Exact compressed Gaussian controls](assets/seven_day_benchmark.png)
+
+The standard seed-7 controls use the same 48 bins, seven basis functions per
+secondary component, fixed prior and three MAP restarts. Their auto-spectrum
+log10 RMSE is 0.0633 for continuous data, 0.0738 for the exact gapped fit,
+and 0.0699 for the gapped independent-bin approximation. In this realization,
+retaining the exact covariance does not improve the point RMSE over that
+approximation. This is not a posterior calibration study.
+
+The [benchmark receipt](assets/seven_day_benchmark_run.json) and
+[benchmark errors](assets/seven_day_benchmark_errors.json) retain all controls,
+null-window residual scores, optimizer checks and independent predictive
+scores. These numerical targets are distinct from the full matrix VI fit.

@@ -34,7 +34,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=9c3e77be" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
     <link rel="stylesheet" type="text/css" href="_static/case-studies.css?v=859fb48c" />
@@ -234,7 +234,9 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="likelihood.html">Joint gap-aware likelihood</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference_matrix.html">Reference, adaptive bins and theta</a></li>
+<li class="toctree-l1"><a class="reference internal" href="likelihood.html">Exact compressed gap benchmark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gaplike_xyz.html">Can GapLike fit XYZ?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="models.html">Models and conventions</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://nz-gravity.github.io/LogPSplinePSD/intro.html">LogPSplinePSD documentation ↗</a></li>
 </ul>
@@ -387,6 +389,7 @@
             </div>
             <nav aria-label="Page">
                 <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introductory-cases">Introductory cases</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reproducibility">Reproducibility</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#checks-and-documentation">Checks and documentation</a></li>
 </ul>
@@ -407,30 +410,54 @@ Each example creates its own seeded simulation and refuses to overwrite an
 existing output directory.</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/nz-gravity/logpsplines_lisa_case_studies.git
 <span class="nb">cd</span><span class="w"> </span>logpsplines_lisa_case_studies
+git<span class="w"> </span>checkout<span class="w"> </span>6837a066c46afce78ff9cd58d372a1ae5ba0ac37
 uv<span class="w"> </span>sync<span class="w"> </span>--locked<span class="w"> </span>--extra<span class="w"> </span>gapped
 uv<span class="w"> </span>run<span class="w"> </span>--extra<span class="w"> </span>gapped<span class="w"> </span>lisa-demo-gaps<span class="w"> </span>--output<span class="w"> </span>outputs/seven_day
 </pre></div>
 </div>
-<p>The default seven-day case uses offline Keplerian orbits and runs on a laptop.
-<code class="docutils literal notranslate"><span class="pre">--quick</span></code> uses fewer source bands and Fourier features, keeping all seven days
-at the same five-second cadence. It is an execution check, not a resolution
-change. Both modes fit three restarts for each of three observation models.</p>
-<p>The introductory examples need no optional orbit or gap dependencies:</p>
+<p>The checkout selects the illustrated scientific version, including while
+<a class="reference external" href="https://github.com/nz-gravity/logpsplines_lisa_case_studies/pull/1">PR #1</a> awaits merge.</p>
+<p>The default seven-day case runs offline Keplerian orbits, a full matrix
+reference correction, adaptive coarse-graining and marginalised-theta VI.
+It also reruns the exact compressed Gaussian gap benchmark on the same record.
+Three VI restarts use 6,000 updates per Cholesky row and 256 stored draws.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>uv<span class="w"> </span>run<span class="w"> </span>--extra<span class="w"> </span>gapped<span class="w"> </span>lisa-demo-gaps<span class="w"> </span>--quick<span class="w"> </span>--output<span class="w"> </span>outputs/seven_day_quick
+uv<span class="w"> </span>run<span class="w"> </span>--extra<span class="w"> </span>gapped<span class="w"> </span>lisa-demo-gaps<span class="w"> </span>--benchmark-only<span class="w"> </span>--output<span class="w"> </span>outputs/benchmark
+</pre></div>
+</div>
+<p>Quick mode keeps the full seven days at five-second cadence and uses all
+59,634 native main-fit frequencies. It shortens VI to 1,500 updates per row
+and 64 stored draws, and uses fewer source bands and benchmark features.
+It checks execution, not posterior accuracy.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--vi-steps</span></code> changes updates per row and <code class="docutils literal notranslate"><span class="pre">--vi-restarts</span></code> changes the restart
+count (at least two). All entry points accept <code class="docutils literal notranslate"><span class="pre">--seed</span></code> and <code class="docutils literal notranslate"><span class="pre">--output</span></code>; the
+numbered scripts call the same implementations. The optional <code class="docutils literal notranslate"><span class="pre">--orbit</span> <span class="pre">esa</span></code>
+path downloads lisaorbits’ ESA trailing ephemerides; the published example
+uses Keplerian orbits.</p>
+<section id="introductory-cases">
+<h2>Introductory cases<a class="headerlink" href="#introductory-cases" title="Link to this heading">#</a></h2>
+<p>These need no optional orbit or gap dependencies:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>uv<span class="w"> </span>run<span class="w"> </span>lisa-demo-time<span class="w"> </span>--quick<span class="w"> </span>--output<span class="w"> </span>outputs/time_quick
 uv<span class="w"> </span>run<span class="w"> </span>lisa-demo-xyz<span class="w"> </span>--quick<span class="w"> </span>--output<span class="w"> </span>outputs/xyz_quick
 </pre></div>
 </div>
-<p>Omit <code class="docutils literal notranslate"><span class="pre">--quick</span></code> for the illustrated introductory settings. All entry points
-accept <code class="docutils literal notranslate"><span class="pre">--seed</span></code> and <code class="docutils literal notranslate"><span class="pre">--output</span></code>; the numbered scripts in <code class="docutils literal notranslate"><span class="pre">scripts/</span></code> call the
-same implementations. The optional <code class="docutils literal notranslate"><span class="pre">--orbit</span> <span class="pre">esa</span></code> path downloads lisaorbits’
-ESA trailing ephemerides; the published example uses Keplerian orbits.</p>
+<p>Omit <code class="docutils literal notranslate"><span class="pre">--quick</span></code> for their illustrated settings. The scalar case is a
+local-coefficient VI example; the basic XYZ case is a two-parameter NUTS fit.
+Neither is the full seven-day matrix reconstruction.</p>
+</section>
 <section id="reproducibility">
 <h2>Reproducibility<a class="headerlink" href="#reproducibility" title="Link to this heading">#</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> pins LogPSplinePSD and GapLike to exact Git commits and
-<code class="docutils literal notranslate"><span class="pre">uv.lock</span></code> fixes this independent environment. No paper reproduction
-environment is modified. Each <code class="docutils literal notranslate"><span class="pre">run.json</span></code> records settings, versions, source
-hashes, simulation and likelihood limitations. Curated previews and receipts
+<code class="docutils literal notranslate"><span class="pre">uv.lock</span></code> fixes this independent environment. The newer library pin is used
+only here; no published paper reproduction environment is changed.
+Each <code class="docutils literal notranslate"><span class="pre">run.json</span></code> records settings, source hashes and limitations. The exact
+benchmark has a separate <code class="docutils literal notranslate"><span class="pre">benchmark_run.json</span></code>. Curated previews and receipts
 are in <code class="docutils literal notranslate"><span class="pre">docs/assets/</span></code>; generated time series and fit arrays stay in <code class="docutils literal notranslate"><span class="pre">outputs/</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">*_correction.nc</span></code> contains a library HDF5-backed <code class="docutils literal notranslate"><span class="pre">PSDResult</span></code>, not a generic
+NetCDF-4 file. Read it with <code class="docutils literal notranslate"><span class="pre">PSDResult.from_netcdf</span></code>. Its spectra are in
+reference coordinates and its frequency axis uses log-frequency spline
+coordinates. Physical native-frequency reconstructions and the observation
+references are saved separately in <code class="docutils literal notranslate"><span class="pre">matrix_recovery.npz</span></code>.</p>
 </section>
 <section id="checks-and-documentation">
 <h2>Checks and documentation<a class="headerlink" href="#checks-and-documentation" title="Link to this heading">#</a></h2>
@@ -440,10 +467,10 @@ uv<span class="w"> </span>run<span class="w"> </span>ruff<span class="w"> </span
 uv<span class="w"> </span>run<span class="w"> </span>--group<span class="w"> </span>docs<span class="w"> </span>jupyter-book<span class="w"> </span>build<span class="w"> </span>docs<span class="w"> </span>--warningiserror
 </pre></div>
 </div>
-<p>The website uses the same Jupyter Book 1.x / Sphinx Book Theme and logo as
-the library. Pages build from committed results and never run inference.
-Pull requests build the site and test the scientific contracts; pushes to
-<code class="docutils literal notranslate"><span class="pre">main</span></code> publish it to GitHub Pages.</p>
+<p>The website uses the library’s Jupyter Book / Sphinx Book Theme and logo.
+It builds from committed results without running inference. Pull requests
+build the site and run scientific tests plus the seven-day quick case;
+<code class="docutils literal notranslate"><span class="pre">main</span></code> publishes to GitHub Pages.</p>
 </section>
 </section>
 
@@ -513,6 +540,7 @@ Pull requests build the site and test the scientific contracts; pushes to
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introductory-cases">Introductory cases</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reproducibility">Reproducibility</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#checks-and-documentation">Checks and documentation</a></li>
 </ul>

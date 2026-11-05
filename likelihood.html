@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Joint gap-aware likelihood &#8212; LogPSplinePSD · LISA case studies</title>
+    <title>Exact compressed gap benchmark &#8212; LogPSplinePSD · LISA case studies</title>
   
   
   
@@ -69,8 +69,8 @@
     <link rel="icon" href="_static/favicon.png"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Model conventions" href="models.html" />
-    <link rel="prev" title="Seven-day evolving XYZ with gaps" href="gapped_xyz.html" />
+    <link rel="next" title="Can GapLike fit XYZ?" href="gaplike_xyz.html" />
+    <link rel="prev" title="Parametric reference and multivariate correction" href="reference_matrix.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -236,7 +236,9 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Joint gap-aware likelihood</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference_matrix.html">Reference, adaptive bins and theta</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Exact compressed gap benchmark</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gaplike_xyz.html">Can GapLike fit XYZ?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="models.html">Models and conventions</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://nz-gravity.github.io/LogPSplinePSD/intro.html">LogPSplinePSD documentation ↗</a></li>
 </ul>
@@ -379,7 +381,7 @@
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Joint gap-aware likelihood</h1>
+    <h1>Exact compressed gap benchmark</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -393,6 +395,7 @@
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#covariance-bank">Covariance bank</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scope-of-exactness">Scope of exactness</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#independent-checks">Independent checks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#saved-benchmark-controls">Saved benchmark controls</a></li>
 </ul>
             </nav>
         </div>
@@ -404,10 +407,11 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="joint-gap-aware-likelihood">
-<h1>Joint gap-aware likelihood<a class="headerlink" href="#joint-gap-aware-likelihood" title="Link to this heading">#</a></h1>
-<p>The seven-day case combines a known orbit response with smooth learned
-secondary-noise spectra. GapLike provides the masks and windows. Its
+  <section class="tex2jax_ignore mathjax_ignore" id="exact-compressed-gap-benchmark">
+<h1>Exact compressed gap benchmark<a class="headerlink" href="#exact-compressed-gap-benchmark" title="Link to this heading">#</a></h1>
+<p>The main seven-day case uses a <a class="reference internal" href="reference_matrix.html"><span class="std std-doc">full matrix reference correction</span></a>.
+This retained benchmark combines a known orbit response with two smooth learned
+secondary-noise spectra and its own fixed prior. GapLike provides the masks and windows. Its
 stationary scalar likelihood is not used as though it were a correlated,
 nonstationary XYZ likelihood; the joint feature covariance is constructed here.</p>
 <section id="simulator-and-observation-operator">
@@ -418,7 +422,7 @@ covariance follow Eqs. 2, 9 and 28–29 of
 <a class="reference external" href="https://arxiv.org/html/2610.28726v1">Noisy Pipelines I</a>.
 Independent stationary real link sources have one-sided spectra</p>
 <div class="math notranslate nohighlight">
-\[P_c(f_j)=P_{c,0}(f_j)\exp\{B_{b(j)}\theta_c\}.\]</div>
+\[P_c(f_j)=P_{c,0}(f_j)\exp\{B_{b(j)}\beta_c\}.\]</div>
 <p>Here <span class="math notranslate nohighlight">\(b(j)\)</span> is a declared source-frequency band; the library’s cubic basis
 <span class="math notranslate nohighlight">\(B\)</span> is evaluated at its centre in log frequency. Latent positive-frequency
 coefficients are proper complex Gaussian with covariance
@@ -440,7 +444,7 @@ at every epoch, epoch cross terms are retained.</p>
 <p>Writing <span class="math notranslate nohighlight">\(L_{w,c,b}\)</span> for the real linear map from standardized independent
 link-noise coordinates in source band <span class="math notranslate nohighlight">\(b\)</span> to <span class="math notranslate nohighlight">\(y_w\)</span> gives</p>
 <div class="math notranslate nohighlight">
-\[C_w(\theta)=\sum_{c,b}\exp\{B_b\theta_c\}\,
+\[C_w(\beta)=\sum_{c,b}\exp\{B_b\beta_c\}\,
  C_{w,c,b},\qquad C_{w,c,b}=L_{w,c,b}L_{w,c,b}^{T}.\]</div>
 <p>The implementation accumulates these banks by Fourier convolution of
 <span class="math notranslate nohighlight">\(w(t)a_e(t)\)</span>, streaming source frequencies in chunks. The response is
@@ -455,7 +459,7 @@ proper-complex approximation enters the continuous or gapped joint fit.</p>
 injected truth. It changes the likelihood only by a parameter-independent
 constant. The proper prior is</p>
 <div class="math notranslate nohighlight">
-\[\theta_c\sim N(0,Q^{-1}),\qquad Q=10P+I/0.8^2,\]</div>
+\[\beta_c\sim N(0,Q^{-1}),\qquad Q=10P+I/0.8^2,\]</div>
 <p>where <span class="math notranslate nohighlight">\(P\)</span> is the library’s trace-normalized derivative penalty. MAP
 optimization includes the quadratic prior penalty; the prior determinant
 is constant because <span class="math notranslate nohighlight">\(Q\)</span> is fixed. Three starts must agree to <span class="math notranslate nohighlight">\(10^{-5}\)</span> in
@@ -475,6 +479,12 @@ foreground model. These restrictions are shared by injection and recovery.</p>
 <p>The independent-bin comparison zeros only inter-frequency covariance
 blocks, retaining each real/imaginary XYZ block. It is fitted as an
 approximation and evaluated on independent data with the full covariance.</p>
+<p>The beta weights here are secondary log-PSD corrections. They are not the
+Cholesky regression theta coefficients analytically integrated in the main
+library fit. The benchmark has fewer observations, a narrower model and a
+different prior. Compare its exact versus independent-bin controls within
+<code class="docutils literal notranslate"><span class="pre">benchmark_errors.json</span></code>; do not interpret its RMSE versus full matrix VI as
+a controlled comparison of likelihoods.</p>
 </section>
 <section id="independent-checks">
 <h2>Independent checks<a class="headerlink" href="#independent-checks" title="Link to this heading">#</a></h2>
@@ -490,6 +500,20 @@ finite-difference stationarity check. Earlier scientific contracts verify
 the equal-arm TDI-2 limit, complex spectral symmetry, real-series coefficient
 normalization, matrix window convolution, the library Wishart likelihood
 and gradients, and an exact stationary GapLike likelihood-difference control.</p>
+</section>
+<section id="saved-benchmark-controls">
+<h2>Saved benchmark controls<a class="headerlink" href="#saved-benchmark-controls" title="Link to this heading">#</a></h2>
+<p><img alt="Exact compressed Gaussian controls" src="_images/seven_day_benchmark.png" /></p>
+<p>The standard seed-7 controls use the same 48 bins, seven basis functions per
+secondary component, fixed prior and three MAP restarts. Their auto-spectrum
+log10 RMSE is 0.0633 for continuous data, 0.0738 for the exact gapped fit,
+and 0.0699 for the gapped independent-bin approximation. In this realization,
+retaining the exact covariance does not improve the point RMSE over that
+approximation. This is not a posterior calibration study.</p>
+<p>The <a class="reference download internal" download="" href="_downloads/5bca4a4288494c9cdbeeca0e63e24203/seven_day_benchmark_run.json"><span class="xref download myst">benchmark receipt</span></a> and
+<a class="reference download internal" download="" href="_downloads/82d684eeb974cb9da7a4f8fad88d43f3/seven_day_benchmark_errors.json"><span class="xref download myst">benchmark errors</span></a> retain all controls,
+null-window residual scores, optimizer checks and independent predictive
+scores. These numerical targets are distinct from the full matrix VI fit.</p>
 </section>
 </section>
 
@@ -524,20 +548,20 @@ and gradients, and an exact stationary GapLike likelihood-difference control.</p
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="gapped_xyz.html"
+       href="reference_matrix.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Seven-day evolving XYZ with gaps</p>
+        <p class="prev-next-title">Parametric reference and multivariate correction</p>
       </div>
     </a>
     <a class="right-next"
-       href="models.html"
+       href="gaplike_xyz.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Model conventions</p>
+        <p class="prev-next-title">Can GapLike fit XYZ?</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -563,6 +587,7 @@ and gradients, and an exact stationary GapLike likelihood-difference control.</p
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#covariance-bank">Covariance bank</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scope-of-exactness">Scope of exactness</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#independent-checks">Independent checks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#saved-benchmark-controls">Saved benchmark controls</a></li>
 </ul>
   </nav></div>
 
