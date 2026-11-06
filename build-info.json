@@ -1,6 +1,6 @@
 {
-  "source_commit": "e5717d6c09688b24a3f8a2de133b6ad481c0932e",
-  "notebook_commit": "f7fa624323db7dc2c1166d7f0185eaf8e02c1073",
+  "source_commit": "ae5d72b0b3e7731c30de4afd18ff782d164380cd",
+  "notebook_commit": "e8b35495a84554d2e03bd33dc73fd2a73b8eaeca",
   "source_branch": "prototype/seven-day-orbit-gap-reference",
-  "description": "Four executed channel-level LISA notebook walkthroughs"
+  "description": "Executed NUTS notebooks with marginalised theta and approximate orbit-derived sine reference"
 }

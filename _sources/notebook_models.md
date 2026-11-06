@@ -13,14 +13,14 @@ used in generation, reference calculations and exact covariance controls.
 
 All epochs act on **shared** stationary Gaussian Fourier noise. The real
 outputs are combined using piecewise-linear weights $a_e(t)$ that sum to one.
-With a prescribed, smooth positive-definite residual matrix $R(f)$,
+With a prescribed, smooth positive-definite residual matrix $R_{\rm inj}(f)$,
 
-$$x(t)=\sum_e a_e(t)\operatorname{irfft}\{L_{0,e}(f)R(f)^{1/2}\xi(f)\}(t).$$
+$$x(t)=\sum_e a_e(t)\operatorname{irfft}\{F_e(f)R_{\rm inj}(f)^{1/2}\xi(f)\}(t).$$
 
-The reference factor and evolutionary spectral matrix are
+The generator's factor and evolutionary spectral matrix are
 
-$$L_0(t,f)=\sum_e a_e(t)L_{0,e}(f),\qquad
-S(t,f)=L_0(t,f)R(f)L_0(t,f)^\dagger.$$
+$$F(t,f)=\sum_e a_e(t)F_e(f),\qquad
+S_{\rm gen}(t,f)=F(t,f)R_{\rm inj}(f)F(t,f)^\dagger.$$
 
 This is a controlled Gaussian **spectral-matrix simulator**, not a link-level
 instrument simulation or an implementation of noncommuting TDI delay operators.
@@ -53,27 +53,59 @@ leakage; it does not establish frequency independence or posterior calibration.
 
 ## Standard multivariate estimation
 
+The XYZ notebooks use a deliberately approximate sine reference. At each
+orbit epoch, the three known four-link loop times $\tau_j$ give
+
+$$g_j(f)=2i e^{-i\pi f\tau_j}\sin(\pi f\tau_j)
+       =1-e^{-2\pi i f\tau_j},$$
+
+$$S_{0,e}(f)=\operatorname{diag}(g_e)B_\star(f)
+             \operatorname{diag}(g_e)^\dagger.$$
+
+$B_\star$ is a full first-generation Michelson covariance envelope frozen
+at the initial Keplerian geometry. Only the loop factors follow the known
+analysis geometry. The generator instead evolves the full response, so the
+reference is not an injected truth spectrum. No dip parameters or component
+noise levels are fitted. The sine factors place the dominant nulls, while
+the frozen envelope retains additional known frequency structure.
+
+Let $L_{0,e}=\operatorname{chol}(S_{0,e})$ and interpolate these factors with
+the same epoch weights. The fitted model is
+$S_{\rm fit}(t,f)=L_0(t,f)R_{\rm fit}(f)L_0(t,f)^\dagger$.
+The ordinary multivariate library spline describes the full correction
+$R_{\rm fit}$, not independent corrections for X, Y and Z.
+
 Notebook 3 follows the inverse-Cholesky construction in
 [Vajpeyi et al., arXiv:2607.04833](https://arxiv.org/abs/2607.04833):
 
-$$S^{-1}=T^\dagger D^{-1}T,\qquad
+$$R_{\rm fit}^{-1}=T^\dagger D^{-1}T,\qquad
 D=\operatorname{diag}(e^{h_1},e^{h_2},e^{h_3}),\qquad
 T_{jl}=-\theta_{jl}\ (j>l),\quad T_{jj}=1.$$
 
 Three log-diagonal fields and six real/imaginary regression fields describe
 all auto and cross spectra. The pinned library integrates Gaussian theta
 weights analytically and restores their joint conditional draws before
-reconstruction. The remaining inference is variational in these walkthroughs.
-Exact conditional integration does not make the overall VI approximation exact.
+reconstruction. Both XYZ notebooks use two NUTS chains for the remaining
+log-diagonal weights and smoothing scales. Marginalisation is exact for the
+chosen Whittle target. It does not change that observation approximation.
 
 The reported multivariate point is a mean of whole reconstructed matrices,
 which preserves positive definiteness. Elementwise matrix medians need not.
 Coherence shown in a notebook is computed from its displayed point matrix.
 
-The first XYZ fit uses the ordinary library interface on `TimeSeries`, with
-Hann-tapered blocks and adaptive frequency aggregation. It starts below
-25 mHz to introduce the vanilla estimator before the nulls are addressed
-with an orbit reference in the fourth notebook.
+Notebook 3 calls `local_wishart_grid(TimeSeries(...))` for eight Hann-tapered
+blocks spanning 0.4–99 mHz. The sine reference is propagated through the
+same nominal block window and the complex vectors are whitened before
+pooling. `fit(WishartData, StationaryConfig(method="nuts"))` runs the ordinary
+multivariate model without a custom likelihood. Counts retain all eight
+blocks. The nominal circulant block covariance approximates the original
+long-record finite-window covariance.
+
+Both XYZ fits use the library's stationary prior on the **correction**.
+This is a different prior on the physical spectrum from a raw-spectrum
+spline fit. The reference transformation preserves fixed-matrix likelihood
+differences before the declared window/coarse-graining approximations; it
+does not make these two prior models equivalent.
 
 ## Short segments, reference correction and adaptive bins
 
@@ -95,15 +127,24 @@ Conditioning and a frequency-dependent correction need not commute.
 The adaptive pilot uses observed gapped training data only. Both fits share
 the same partition, fixed before inference. Unsmoothed complex products and
 actual counts are summed; native bins in prescribed null neighbourhoods
-remain separate. “Adaptive” does not mean the likelihood changes during VI.
+remain separate. “Adaptive” does not mean the likelihood changes during NUTS.
 The residual is approximately constant within an aggregate; this is not a
 posterior error guarantee.
 
 The reference adapter uses the library's unchanged stationary prior,
 max-normalized derivative penalties with a $10^{-6}$ ridge and
-$\sigma\sim\mathrm{HalfNormal}(1.28)$. Its guide starts at the known
-reference, avoiding zero empirical conditional variances at rank-one cells.
-It restores endpoint multiplicity when evaluating the library's stationary
+$\sigma\sim\mathrm{HalfNormal}(1.28)$. The stationary eight-block fit uses
+the library's observation-based initialisation. For the seven-day fit,
+protected singleton matrices have zero empirical conditional variances and
+give unusable starting values. A small process-local compatibility context
+starts the log-diagonal correction at zero and smoothing scales at 0.3;
+theta remains integrated, not fixed. The pinned `StationaryConfig` does not
+expose an initializer argument, so this context replaces only
+`empirical_init_values` during `fit`, then restores it. A numerical test
+verifies the unchanged log target; no library files or environments are
+modified. Both fits use the library's information-scaled coordinates.
+The reconstruction adapter
+restores endpoint multiplicity when evaluating the library's stationary
 breakpoint basis on the native grid. Tests compare this reconstruction with
 the library's own fitting-grid evaluation.
 
@@ -120,14 +161,20 @@ declared simulator. It is exact for the retained features, not the entire
 three-channel record. An independent dense time-domain operator test checks
 normalisation and all covariance blocks.
 
-The fourth notebook evaluates the reference, a reconstructed matrix and an
-injected-matrix oracle on independent realizations. The oracle is used only
+The fourth notebook evaluates the approximate sine reference, a reconstructed
+matrix and an injected-matrix oracle on independent realizations. Each
+candidate's covariance propagates its own spectral factors through the
+complete observation operator; the oracle uses the original full-response
+generator. The oracle is used only
 for this final control. The benchmark does not optimize a component model,
 fit a joint posterior, or analytically marginalise theta under this different
 likelihood. Outside the fitted band, the recovered residual is extended
 constantly at the nearest boundary; the score includes that assumption.
 
-The fast fit remains an independent-frequency Whittle approximation. Its
+The NUTS fit remains an independent-frequency Whittle approximation. Its
 window ENBW correction approximately tempers information; it does not
-restore the omitted covariance. Three VI restarts and loss checks help
-inspect numerical stability, without asserting calibrated uncertainty.
+restore the omitted covariance. Each inference notebook displays chain traces,
+divergences, rank-normalized split R-hat, bulk/tail ESS and tree-depth hits.
+All retained chains enter reconstruction. The displayed posterior intervals
+condition on the reference and Whittle model; they are not a demonstrated
+coverage result for the full time-domain data-generating process.

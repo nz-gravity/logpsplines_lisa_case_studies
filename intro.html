@@ -398,12 +398,12 @@ Each notebook explains the next step, runs the code, and plots the result.</p>
 <li><p><strong><a class="reference internal" href="notebooks/01_generate_data.html"><span class="std std-doc">Generate the data</span></a></strong> — inspect the
 full XYZ matrix, draw real time series, add time variation and gaps.</p></li>
 <li><p><strong><a class="reference internal" href="notebooks/02_time_varying_psd.html"><span class="std std-doc">Recover a time-varying PSD</span></a></strong> —
-prepare local channel-A powers and fit a time-frequency spline with LogPSplinePSD.</p></li>
+prepare local channel-A powers and sample a time-frequency spline with NUTS.</p></li>
 <li><p><strong><a class="reference internal" href="notebooks/03_xyz_psd.html"><span class="std std-doc">Estimate the XYZ spectral matrix</span></a></strong> —
-call the standard multivariate library fitter and inspect auto spectra,
-complex cross spectra and coherence.</p></li>
+use an approximate sine reference for the dips, run the library’s
+marginalised multivariate NUTS fitter, and inspect auto/cross spectra and coherence.</p></li>
 <li><p><strong><a class="reference internal" href="notebooks/04_short_xyz_gaps.html"><span class="std std-doc">Short-duration XYZ with gaps</span></a></strong> —
-use a seven-day orbit reference, a full matrix correction and adaptive bins;
+use a seven-day sine reference, marginalised NUTS and adaptive bins;
 compare continuous/gapped recovery and an exact covariance point benchmark.</p></li>
 </ol>
 <p>The estimated quantities are <strong>channel PSDs and spectral matrices</strong>.

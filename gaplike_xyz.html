@@ -407,8 +407,8 @@
 <p><strong>GapLike can be part of an XYZ analysis.</strong> The distinction is between its
 gap tools and the covariance assumed by its current multichannel likelihood.</p>
 <p>The <a class="reference internal" href="notebooks/04_short_xyz_gaps.html"><span class="std std-doc">fourth notebook</span></a> uses GapLike’s masks,
-edge gates and segment windows on all three time streams. A spectral-matrix
-adapter supplies the channel and orbit structure. Its exact point benchmark
+edge gates and segment windows on all three time streams. An approximate orbit-derived sine
+reference supplies the channel and response-dip structure. Its exact point benchmark
 also retains the frequency correlations created by the observation window.</p>
 <section id="why-not-stack-xyz-into-a-scalar-solver">
 <h2>Why not stack XYZ into a scalar solver?<a class="headerlink" href="#why-not-stack-xyz-into-a-scalar-solver" title="Link to this heading">#</a></h2>
@@ -436,10 +436,10 @@ the original XYZ likelihood.</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Full matrix spline fit</p></td>
+<tr class="row-even"><td><p>Full matrix spline NUTS fit</p></td>
 <td><p>Included in the residual spectral matrix</p></td>
 <td><p>Whittle approximation, with a window-aware nominal reference</p></td>
-<td><p>Fast recovery with adaptive bins and marginalised theta</p></td>
+<td><p>Recovery with adaptive bins and marginalised theta</p></td>
 </tr>
 <tr class="row-odd"><td><p>Exact selected-feature covariance</p></td>
 <td><p>Included</p></td>
@@ -449,8 +449,10 @@ the original XYZ likelihood.</p>
 </tbody>
 </table>
 </div>
-<p>The exact covariance in the notebook uses the same full-matrix simulator and
-observation windows as the injected data. It does not fit noise-component
+<p>The exact covariance calculation propagates the full observation operator
+for each candidate reference-plus-correction model. The independent oracle
+uses the original full-response generator; the learned model uses its
+approximate sine reference. Both use the original observation windows. It does not fit noise-component
 levels. The main fitter’s analytic theta marginalisation applies to its
 Whittle target; substituting the exact gapped target needs a new derivation.</p>
 <p>A full-time-series XYZ solver could use a block covariance operator with

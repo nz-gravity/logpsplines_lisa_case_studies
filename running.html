@@ -414,7 +414,7 @@ notebooks in a repository checkout.</p>
 <p>Requires Python 3.12+ and <a class="reference external" href="https://docs.astral.sh/uv/">uv</a>.</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/nz-gravity/logpsplines_lisa_case_studies.git
 <span class="nb">cd</span><span class="w"> </span>logpsplines_lisa_case_studies
-git<span class="w"> </span>checkout<span class="w"> </span>f7fa624323db7dc2c1166d7f0185eaf8e02c1073
+git<span class="w"> </span>checkout<span class="w"> </span>e8b35495a84554d2e03bd33dc73fd2a73b8eaeca
 uv<span class="w"> </span>sync<span class="w"> </span>--locked<span class="w"> </span>--extra<span class="w"> </span>gapped<span class="w"> </span>--group<span class="w"> </span>notebooks<span class="w"> </span>--group<span class="w"> </span>docs
 uv<span class="w"> </span>run<span class="w"> </span>--no-sync<span class="w"> </span>jupyter<span class="w"> </span>lab<span class="w"> </span>docs/notebooks
 </pre></div>
@@ -449,8 +449,9 @@ checkout’s small simulation helpers and shared data.</p>
 </div>
 <p>This executes the notebooks in order with a fresh project-environment kernel
 for each, saving figures, tables and execution counts in the <code class="docutils literal notranslate"><span class="pre">.ipynb</span></code> files.
-The execution time depends on your machine; the notebooks use VI to keep
-the examples small. There is no hidden NUTS job or cluster submission.</p>
+The execution time depends on your machine. All three inference notebooks
+run two NUTS chains with 1,000 warmup and 1,000 retained draws per chain.
+NUTS runs locally; no cluster submission is needed.</p>
 </section>
 <section id="reproducibility-and-limits">
 <h2>Reproducibility and limits<a class="headerlink" href="#reproducibility-and-limits" title="Link to this heading">#</a></h2>
