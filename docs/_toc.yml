@@ -1,0 +1,26 @@
+format: jb-book
+root: intro
+parts:
+  - caption: Start here
+    chapters:
+      - file: running
+        title: Install and run
+  - caption: Notebook walkthroughs
+    numbered: false
+    chapters:
+      - file: notebooks/01_generate_data
+        title: 1. Generate the data
+      - file: notebooks/02_time_varying_psd
+        title: 2. Time-varying PSD
+      - file: notebooks/03_xyz_psd
+        title: 3. Standard XYZ estimation
+      - file: notebooks/04_short_xyz_gaps
+        title: 4. Short-duration XYZ with gaps
+  - caption: Further reading
+    chapters:
+      - file: notebook_models
+        title: Simulation and likelihood notes
+      - file: gaplike_xyz
+        title: GapLike and correlated XYZ
+      - url: https://nz-gravity.github.io/LogPSplinePSD/intro.html
+        title: LogPSplinePSD documentation ↗

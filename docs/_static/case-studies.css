@@ -1,0 +1,25 @@
+/* Keep the library's Sphinx Book Theme typography, palette and theme switcher. */
+.library-return {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  padding: .35rem .65rem;
+  margin-left: .4rem;
+  border: 1px solid var(--pst-color-border);
+  border-radius: .3rem;
+  color: var(--pst-color-primary);
+  background: var(--pst-color-background);
+  font-size: .85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.library-return:hover, .library-return:focus-visible {
+  border-color: var(--pst-color-primary);
+  color: var(--pst-color-primary);
+  text-decoration: underline;
+}
+@media (max-width: 575px) {
+  .library-return { font-size: .7rem; padding: .3rem; gap: .2rem; margin-left: 0; }
+}
+@media print { .library-return { display: none; } }

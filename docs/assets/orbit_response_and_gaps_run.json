@@ -1,0 +1,100 @@
+{
+  "created_utc": "2026-11-05T01:05:00.534945+00:00",
+  "source_commit": "dbff84b00aff2bdb348197eabc7b532e2176a745",
+  "source_sha256": {
+    "src/lisa_case_studies/__init__.py": "0d6247914282baf518749f438925856bb94f2c50d6a8f6cc3af3016fa93dda12",
+    "src/lisa_case_studies/common.py": "98818b4785c621ce654cde0fe68a583203b1bd5ec48efd697041c5dc9bcce50c",
+    "src/lisa_case_studies/gapped_xyz.py": "9aaee5c860c240b2ebd5aca720f7868407f3e4abd70af16a8b1d2e30e80e5405",
+    "src/lisa_case_studies/noise.py": "0e287182e3db0d66e6bd4d9f48f3e8f98077c34554efdf01440d15a2b1f30ad2",
+    "src/lisa_case_studies/orbit_reference.py": "587970a799d177984cbcecbd7c49664be96e6acd8902addae6369f53290831ae",
+    "src/lisa_case_studies/time_varying.py": "715894e45a3cee49e323309c1ca79e4188ed938a5ce2fb8eb01293760bc49a9d",
+    "src/lisa_case_studies/xyz.py": "46bd450d4e1d55c0bf735484def56c5c13058dbd9ec66741da01d3265cfe49c6"
+  },
+  "dependencies": {
+    "LogPSplinePSD": "1.0.2.dev1+g468092798",
+    "numpy": "2.5.4",
+    "jax": "0.9.1",
+    "numpyro": "0.20.0"
+  },
+  "case": "orbit_reference_and_gaps_prototype",
+  "seed": 7,
+  "quick": false,
+  "duration_days": 7,
+  "dt_seconds": 5.0,
+  "n_samples": 120960,
+  "orbit_model": "keplerian",
+  "orbit_origin_seconds": 7776000.0,
+  "epochs": 8,
+  "directed_link_order": [
+    12,
+    23,
+    31,
+    13,
+    32,
+    21
+  ],
+  "gaplike_version": "0.2.0",
+  "gaplike_commit": "99c61931f3f47997d589f255191052ccdbb79f97",
+  "lisaorbits_version": "3.0.3",
+  "duty_cycle": 0.9404761904761905,
+  "gap_intervals_seconds": [
+    [
+      129600.0,
+      144000.0
+    ],
+    [
+      367200.0,
+      388800.0
+    ]
+  ],
+  "selected_bins": 59634,
+  "injected_psd_scales": [
+    1.4,
+    0.8
+  ],
+  "point_fits": {
+    "frozen_orbit_window_corrected": {
+      "psd_scales": [
+        1.429465948929382,
+        0.7970699587491459
+      ],
+      "negative_log_likelihood": 142760.7838563809,
+      "mean_whitened_q": 3.0000000017742385,
+      "iterations": 11,
+      "success": true,
+      "at_parameter_bound": false,
+      "q_interpretation": "In-sample MLE amplitude score enforces mean q near 3; not an independent goodness-of-fit test"
+    },
+    "epoch_average_window_power_only": {
+      "psd_scales": [
+        1.537590203892427,
+        1.332157485301481
+      ],
+      "negative_log_likelihood": 229780.87611254217,
+      "mean_whitened_q": 2.9999999932231955,
+      "iterations": 9,
+      "success": true,
+      "at_parameter_bound": false,
+      "q_interpretation": "In-sample MLE amplitude score enforces mean q near 3; not an independent goodness-of-fit test"
+    },
+    "epoch_average_window_corrected": {
+      "psd_scales": [
+        1.4294657484515114,
+        0.7970371016862143
+      ],
+      "negative_log_likelihood": 142761.73764355134,
+      "mean_whitened_q": 3.000000001772713,
+      "iterations": 11,
+      "success": true,
+      "at_parameter_bound": false,
+      "q_interpretation": "In-sample MLE amplitude score enforces mean q near 3; not an independent goodness-of-fit test"
+    }
+  },
+  "simulation": "Stationary circulant surrogate with orbit-averaged covariance, NOT an end-to-end nonstationary TDI simulation",
+  "limitations": [
+    "Per-bin Whittle target drops gap-induced cross-frequency correlations",
+    "No filtering/decimation chain or aliasing is simulated",
+    "No calibrated uncertainty or completed time-varying spline recovery claim"
+  ],
+  "source_paper": "https://arxiv.org/html/2610.28726v1"
+}
