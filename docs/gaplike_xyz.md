@@ -4,8 +4,8 @@
 gap tools and the covariance assumed by its current multichannel likelihood.
 
 The [fourth notebook](notebooks/04_short_xyz_gaps.ipynb) uses GapLike's masks,
-edge gates and segment windows on all three time streams. A spectral-matrix
-adapter supplies the channel and orbit structure. Its exact point benchmark
+edge gates and segment windows on all three time streams. An approximate orbit-derived sine
+reference supplies the channel and response-dip structure. Its exact point benchmark
 also retains the frequency correlations created by the observation window.
 
 ## Why not stack XYZ into a scalar solver?
@@ -29,11 +29,13 @@ the original XYZ likelihood.
 
 | Calculation | Channel correlations | Frequency correlations | Purpose |
 |---|---|---|---|
-| Full matrix spline fit | Included in the residual spectral matrix | Whittle approximation, with a window-aware nominal reference | Fast recovery with adaptive bins and marginalised theta |
+| Full matrix spline NUTS fit | Included in the residual spectral matrix | Whittle approximation, with a window-aware nominal reference | Recovery with adaptive bins and marginalised theta |
 | Exact selected-feature covariance | Included | Included, with real/imaginary and epoch cross terms | Independent point-model benchmark |
 
-The exact covariance in the notebook uses the same full-matrix simulator and
-observation windows as the injected data. It does not fit noise-component
+The exact covariance calculation propagates the full observation operator
+for each candidate reference-plus-correction model. The independent oracle
+uses the original full-response generator; the learned model uses its
+approximate sine reference. Both use the original observation windows. It does not fit noise-component
 levels. The main fitter's analytic theta marginalisation applies to its
 Whittle target; substituting the exact gapped target needs a new derivation.
 

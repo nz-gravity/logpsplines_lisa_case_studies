@@ -11,7 +11,7 @@ Requires Python 3.12+ and [uv](https://docs.astral.sh/uv/).
 ```sh
 git clone https://github.com/nz-gravity/logpsplines_lisa_case_studies.git
 cd logpsplines_lisa_case_studies
-git checkout f7fa624323db7dc2c1166d7f0185eaf8e02c1073
+git checkout e8b35495a84554d2e03bd33dc73fd2a73b8eaeca
 uv sync --locked --extra gapped --group notebooks --group docs
 uv run --no-sync jupyter lab docs/notebooks
 ```
@@ -47,8 +47,9 @@ uv run --no-sync python scripts/execute_notebooks.py
 
 This executes the notebooks in order with a fresh project-environment kernel
 for each, saving figures, tables and execution counts in the `.ipynb` files.
-The execution time depends on your machine; the notebooks use VI to keep
-the examples small. There is no hidden NUTS job or cluster submission.
+The execution time depends on your machine. All three inference notebooks
+run two NUTS chains with 1,000 warmup and 1,000 retained draws per chain.
+NUTS runs locally; no cluster submission is needed.
 
 ## Reproducibility and limits
 
