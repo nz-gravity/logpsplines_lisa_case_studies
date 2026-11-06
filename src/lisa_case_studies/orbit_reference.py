@@ -33,8 +33,8 @@ def orbit_light_times(time, *, model="keplerian"):
     return np.asarray(orbit.compute_ltt(origin + time, link=LINKS)), origin
 
 
-def mixing_matrix(frequency, light_times):
-    """TDI-2 map from the six directed eta links to XYZ at one epoch."""
+def mixing_matrix(frequency, light_times, *, second_generation=True):
+    """Michelson map, with the optional second-generation loop factor."""
     f = np.asarray(frequency, dtype=float)
     delays = np.asarray(light_times, dtype=float)
     if f.ndim != 1 or np.any(f <= 0) or not np.isfinite(f).all():
@@ -54,13 +54,14 @@ def mixing_matrix(frequency, light_times):
     mixing[:, 2, [1, 2, 3, 4]] = np.stack(
         [-z32 * (1 - r3), 1 - r2, z31 * (1 - r2), -(1 - r3)], axis=-1
     )
-    mixing *= np.stack([1 - r1 * r3, 1 - r1 * r2, 1 - r2 * r3], axis=-1)[..., None]
+    if second_generation:
+        mixing *= np.stack([1 - r1 * r3, 1 - r1 * r2, 1 - r2 * r3], axis=-1)[..., None]
     return mixing
 
 
-def link_transfers(frequency, light_times):
+def link_transfers(frequency, light_times, *, second_generation=True):
     """Maps from six independent TM and six independent OMS sources to XYZ."""
-    mixing = mixing_matrix(frequency, light_times)
+    mixing = mixing_matrix(frequency, light_times, second_generation=second_generation)
     z = np.exp(-2j * np.pi * np.asarray(frequency)[:, None] * np.asarray(light_times))
     tm = mixing.copy()
     for a, b in ((0, 5), (1, 4), (2, 3)):
@@ -69,21 +70,27 @@ def link_transfers(frequency, light_times):
     return tm, mixing
 
 
-def tdi2_kernels(frequency, light_times):
+def tdi2_kernels(frequency, light_times, *, second_generation=True):
     """Full Hermitian TM/OMS transfer matrices at one orbit epoch."""
-    tm_transfer, mixing = link_transfers(frequency, light_times)
+    tm_transfer, mixing = link_transfers(
+        frequency, light_times, second_generation=second_generation
+    )
     oms = mixing @ np.swapaxes(mixing.conj(), -1, -2)
     tm = tm_transfer @ np.swapaxes(tm_transfer.conj(), -1, -2)
     return tm, oms
 
 
-def reference_components(frequency, light_times):
+def reference_components(frequency, light_times, *, second_generation=True):
     """Physical fractional-frequency PSD matrices, one epoch or epoch average."""
     f = np.asarray(frequency)
     delays = np.atleast_2d(light_times)
     kernels = [np.zeros((len(f), 3, 3), complex) for _ in range(2)]
     for epoch in delays:
-        for total, value in zip(kernels, tdi2_kernels(f, epoch), strict=True):
+        for total, value in zip(
+            kernels,
+            tdi2_kernels(f, epoch, second_generation=second_generation),
+            strict=True,
+        ):
             total += value / len(delays)
     acceleration = (
         (3e-15) ** 2

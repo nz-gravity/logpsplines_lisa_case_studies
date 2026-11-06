@@ -11,6 +11,7 @@ from dataclasses import replace
 
 import numpy as np
 from log_psplines import StationaryConfig, WishartData, fit
+from log_psplines.data.spectral_utils import Y_to_U
 from log_psplines.inference.model import prepare_model
 from log_psplines.preprocessing.coarse_grain import (
     CoarseGrainSpec,
@@ -23,19 +24,24 @@ from scipy.interpolate import BSpline
 
 
 def coefficient_data(coefficients, frequency, *, enbw=1.0):
-    """Encode rank-one complex XYZ products without adding artificial noise."""
-    u = np.zeros((len(frequency), 3, 3), complex)
-    u[:, :, 0] = coefficients
+    """Encode summed complex XYZ products, retaining actual replicate counts."""
+    coefficients = np.asarray(coefficients)
+    if coefficients.ndim == 2:
+        coefficients = coefficients[..., None]
+    if coefficients.ndim != 3 or coefficients.shape[:2] != (len(frequency), 3):
+        raise ValueError("coefficients must be (frequency, XYZ[, replicate])")
+    products = coefficients @ coefficients.conj().swapaxes(-1, -2)
+    u = Y_to_U(products)
     return WishartData(
         u_re=u.real,
         u_im=u.imag,
         freq=frequency,
         N=len(frequency),
         p=3,
-        Nb=1,
+        Nb=coefficients.shape[-1],
         duration=1.0,
         enbw=enbw,
-        raw_psd=coefficients[:, :, None] * coefficients[:, None, :].conj(),
+        raw_psd=products / coefficients.shape[-1],
         preprocessing={
             "mean_removal": "latent DC zero; no data-dependent centering",
             "window": "GapLike gate/taper; native nominal-matrix whitening",

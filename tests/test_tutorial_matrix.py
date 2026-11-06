@@ -1,7 +1,9 @@
 """Independent Gaussian operator controls for the channel-level tutorials."""
 
 import numpy as np
+import pytest
 
+from lisa_case_studies.sine_reference import SineReference
 from lisa_case_studies.tutorial_data import (
     MatrixSimulation,
     matrix_root,
@@ -9,8 +11,11 @@ from lisa_case_studies.tutorial_data import (
 )
 
 
-def test_tutorial_joint_covariance_matches_independent_time_domain_columns():
-    simulation = MatrixSimulation(
+@pytest.mark.parametrize("simulation_type", [MatrixSimulation, SineReference])
+def test_tutorial_joint_covariance_matches_independent_time_domain_columns(
+    simulation_type,
+):
+    simulation = simulation_type(
         24,
         5.0,
         np.array([0.0, 115.0]),
